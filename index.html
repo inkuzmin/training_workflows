@@ -1,0 +1,250 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Vendor styles -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cytoscape-panzoom/2.5.2/cytoscape.js-panzoom.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <!-- Custom styles -->
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+    <div class="workflow-diagram-wrapper">
+        <div class="workflow-toolbar-wrapper">
+            <div id="workflow-toolbar">
+              <span id="workflow-save-warning" style="display: none">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                You have unsaved changes
+              </span>
+                <span id="workflow-status-message"></span>
+                <a class="btn btn-default disabled" id="workflow-toolbar-undo">
+                    <i class="fa fa-undo"></i> <span>Undo</span>
+                </a>
+                <a class="btn btn-default disabled" id="workflow-toolbar-redo">
+                    <i class="fa fa-repeat"></i> <span>Redo</span>
+                </a>
+                <a class="btn btn-default" id="workflow-toolbar-add">
+                    <i class="fa fa-plus"></i> Add node
+                </a>
+            </div>
+            <div id="workflow-status-bar">
+                <div class="pull-right">
+                    <a class="btn btn-default node-context-button edge-context-button" id="workflow-toolbar-edit" style="display: none">
+                        <i class="fa fa-edit"></i> Edit
+                    </a>
+                    <a class="btn btn-default node-context-button" id="workflow-toolbar-link" style="display: none">
+                        <i class="fa fa-link"></i> Link
+                    </a>
+                    <a class="btn btn-default node-context-button" id="workflow-toolbar-add-child" style="display: none">
+                        <i class="fa fa-plus-square"></i> Add child
+                    </a>
+                    <a class="btn btn-default node-context-button edge-context-button" id="workflow-toolbar-delete" style="display: none">
+                        <i class="fa fa-trash"></i> Delete
+                    </a>
+                    <a class="btn btn-default" id="workflow-toolbar-cancel" style="display: none">
+                        <i class="fa fa-ban"></i> <span>Cancel</span>
+                    </a>
+                </div>
+                <div id="workflow-status-selected-node"></div>
+            </div>
+        </div>
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="node-modal-title" id="node-modal">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="node-modal-title">New node</h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="node-modal-form-title">Title</label>
+                            <input type="text" class="form-control" id="node-modal-form-title" placeholder="Title">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="node-modal-form-description">Description</label>
+                            <textarea class="form-control" id="node-modal-form-description" rows="5"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Associations</label>
+                            <div id="node-modal-associated-resource-list">
+                                <!--<%# This is populated via javascript. See workflows.js and templates/associated_resource_form.hbs %>-->
+                            </div>
+                            <button data-resource-type="materials" class="btn btn-default node-modal-add-resource-btn"><i class="fa fa-book"></i> Add training material</button>
+                            <button data-resource-type="events" class="btn btn-default node-modal-add-resource-btn"><i class="fa fa-calendar"></i> Add event</button>
+                            <button data-resource-type="tools" class="btn btn-default node-modal-add-resource-btn"><i class="fa fa-wrench"></i> Add tool</button>
+                            <button data-resource-type="policies" class="btn btn-default node-modal-add-resource-btn"><i class="fa fa-file-text-o"></i> Add policy</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Terms</label>
+                            <ul id="node-modal-ontology-terms-list">
+                                <%# This is populated via javascript. See workflows.js and templates/associated_resource_form.hbs %>
+                            </ul>
+                            <input id="term-autocomplete" data-attribute="title" type="text" class="form-control" autocomplete="off" placeholder="Type to search for a term..."/>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="node-modal-form-colour">Colour</label>
+                            <p style="margin: 0px; padding: 5px;">
+                                Click inside the box below to select colour using colour picker:
+                            </p>
+                            <input type="text" class="form-control jscolor {hash:true, zIndex: 100000}" value="#F0721E" id="node-modal-form-colour">
+                            <p style="background-color: #E7E7E7; margin-top: 5px; padding: 5px;">
+                                Or select from pre-defined colours:
+                                <!--<%= render 'workflows/partials/simple_colour_picker' %>-->
+                            </p>
+                        </div>
+
+                        <input type="hidden" id="node-modal-form-id">
+                        <input type="hidden" id="node-modal-form-parent-id">
+                        <input type="hidden" id="node-modal-form-x">
+                        <input type="hidden" id="node-modal-form-y">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="node-modal-form-close">Close</button>
+                        <button type="button" class="btn btn-primary" id="node-modal-form-confirm">Done</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="workflow-diagram-container">
+            <div id="workflow-diagram-content">
+                <div id="cy" data-editable="true" data-hide-child-nodes="false">
+                </div>
+                <script id="workflow-content-json" type="application/json" data-tess-id="123">
+                  null
+                </script>
+            </div>
+            <div id="workflow-diagram-sidebar">
+                <h3 class="nav-heading" id="workflow-diagram-sidebar-title">Test</h3>
+                <div id="workflow-diagram-sidebar-desc">Test</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HandlebarTemplates -->
+    <script id="workflows/associated_resource_form" type="text/x-handlebars-template">
+        <div class="form-inline associated-resource">
+            <span class="icon"><i class="fa {{icon}}"></i></span>
+            <div class="form-group">
+                <label>Title</label>
+                <input data-attribute="title" type="text" class="form-control" placeholder="Title" value="{{title}}">
+            </div>
+            <div class="form-group">
+                <label>URL</label>
+                <input data-attribute="url" type="text" class="form-control" placeholder="http://www.example.com/..." value="{{url}}">
+            </div>
+            <input data-attribute="type" type="hidden" value="{{type}}">
+            <a href="#" title="Click to delete" class="delete-associated-resource">&times;</a>
+        </div>
+    </script>
+
+    <script id="workflows/ontology_term_form" type="text/x-handlebars-template">
+        <li class="ontology-term" data-attribute-label="{{ label }}" data-attribute-url="{{ uri }}">
+            {{ label }} <span class="muted">{{ uri }}</span>
+            <a href="#" class="delete-list-item">&times;</a>
+        </li>
+    </script>
+    <script id="workflows/sidebar_content" type="text/x-handlebars-template">
+        {{#if html_description}}
+        {{{html_description}}}
+        {{else}}
+        <p class="muted">No description provided</p>
+        {{/if}}
+
+        {{#if associatedResources}}
+        {{#if_any associatedResources "type" "materials"}}
+        <h4 class="nav-heading-darker">Training materials</h4>
+        {{#each_when associatedResources "type" "materials"}}
+        <div class="resourceCard">
+            <a href="{{this.url}}" target="_blank" class="h4">{{this.title}}</a>
+        </div>
+        {{/each_when}}
+        {{/if_any}}
+
+        {{#if_any associatedResources "type" "events"}}
+        <h4 class="nav-heading-darker">Training events</h4>
+        {{#each_when associatedResources "type" "events"}}
+        <div class="resourceCard">
+            <a href="{{this.url}}" target="_blank" class="h4">{{this.title}}</a>
+        </div>
+        {{/each_when}}
+        {{/if_any}}
+
+        {{#if_any associatedResources "type" "tools"}}
+        <h4 class="nav-heading-darker">Tools</h4>
+        {{#each_when associatedResources "type" "tools"}}
+        <div class="resourceCard">
+            <a href="{{this.url}}" target="_blank" class="h4">{{this.title}}</a>
+            <i><span id=tool-description-{{this.id}}></span></i>
+            <div id=tool-topics-{{this.id}}></div>
+        </div>
+        {{/each_when}}
+        {{/if_any}}
+
+        {{#if_any associatedResources "type" "policies"}}
+        <h4 class="nav-heading-darker">Policies</h4>
+        {{#each_when associatedResources "type" "policies"}}
+        <div class="resourceCard">
+            <a href="{{this.url}}" target="_blank" class="h4">{{this.title}}</a>
+        </div>
+        {{/each_when}}
+        {{/if_any}}
+        {{/if}}
+
+        {{#if ontologyTerms}}
+        <h4 class="nav-heading-darker">Terms</h4>
+        <ul>
+            {{#each ontologyTerms}}
+            <li>{{this.label}}</li>
+            {{/each}}
+        </ul>
+        {{/if}}
+    </script>
+
+    <!-- Vendor scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.4.1/markdown-it.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.2.9/cytoscape.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape-panzoom/2.5.2/cytoscape-panzoom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.3.5/split.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
+
+    <script>
+        var HandlebarsTemplates = {
+            'workflows/associated_resource_form': Handlebars.compile(document.getElementById('workflows/associated_resource_form').innerHTML),
+            'workflows/ontology_term_form': Handlebars.compile(document.getElementById('workflows/ontology_term_form').innerHTML),
+            'workflows/sidebar_content': Handlebars.compile(document.getElementById("workflows/sidebar_content").innerHTML)
+        }
+    </script>
+
+    <!-- Custom js -->
+    <script src="js/main.js"></script>
+
+    <!-- Init -->
+    <script>
+        Workflows.formSubmitted = false;
+        $(window).unbind('page:before-change', Workflows.promptBeforeLeaving);
+        $(window).unbind('beforeunload', Workflows.promptBeforeLeaving);
+        $(window).bind('page:before-change', Workflows.promptBeforeLeaving);
+        $(window).bind('beforeunload', Workflows.promptBeforeLeaving);
+    </script>
+
+    <!-- Reload on save -->
+    <script src="//localhost:35729/livereload.js"></script>
+    </body>
+</html>
