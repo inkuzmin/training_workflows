@@ -12,6 +12,8 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cytoscape-panzoom/2.5.2/cytoscape.js-panzoom.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-simplecolorpicker@0.3.1/jquery.simplecolorpicker.css">
+
         <!-- Custom styles -->
         <link rel="stylesheet" href="css/main.css">
     </head>
@@ -102,7 +104,147 @@
                             <input type="text" class="form-control jscolor {hash:true, zIndex: 100000}" value="#F0721E" id="node-modal-form-colour">
                             <p style="background-color: #E7E7E7; margin-top: 5px; padding: 5px;">
                                 Or select from pre-defined colours:
-                                <!--<%= render 'workflows/partials/simple_colour_picker' %>-->
+                                <select id="simple-colour-picker">
+                                    <option value="#FFC0CB"></option>
+                                    <option value="#FFB6C1"></option>
+                                    <option value="#FF69B4"></option>
+                                    <option value="#FF1493"></option>
+                                    <option value="#DB7093"></option>
+                                    <option value="#C71585"></option>
+                                    <option value="#FFA07A"></option>
+                                    <option value="#FA8072"></option>
+                                    <option value="#E9967A"></option>
+                                    <option value="#F08080"></option>
+                                    <option value="#CD5C5C"></option>
+                                    <option value="#DC143C"></option>
+                                    <option value="#B22222"></option>
+                                    <option value="#8B0000"></option>
+                                    <option value="#FF0000"></option>
+                                    <option value="#FF4500"></option>
+                                    <option value="#FF6347"></option>
+                                    <option value="#FF7F50"></option>
+                                    <option value="#FF8C00"></option>
+                                    <option value="#FFA500"></option>
+                                    <option value="#FFFF00"></option>
+                                    <option value="#FFFFE0"></option>
+                                    <option value="#FFFACD"></option>
+                                    <option value="#FAFAD2"></option>
+                                    <option value="#FFEFD5"></option>
+                                    <option value="#FFE4B5"></option>
+                                    <option value="#FFDAB9"></option>
+                                    <option value="#EEE8AA"></option>
+                                    <option value="#F0E68C"></option>
+                                    <option value="#BDB76B"></option>
+                                    <option value="#FFD700"></option>
+                                    <option value="#FFF8DC"></option>
+                                    <option value="#FFEBCD"></option>
+                                    <option value="#FFE4C4"></option>
+                                    <option value="#FFDEAD"></option>
+                                    <option value="#F5DEB3"></option>
+                                    <option value="#DEB887"></option>
+                                    <option value="#D2B48C"></option>
+                                    <option value="#BC8F8F"></option>
+                                    <option value="#F4A460"></option>
+                                    <option value="#DAA520"></option>
+                                    <option value="#B8860B"></option>
+                                    <option value="#CD853F"></option>
+                                    <option value="#D2691E"></option>
+                                    <option value="#8B4513"></option>
+                                    <option value="#A0522D"></option>
+                                    <option value="#A52A2A"></option>
+                                    <option value="#800000"></option>
+                                    <option value="#556B2F"></option>
+                                    <option value="#808000"></option>
+                                    <option value="#6B8E23"></option>
+                                    <option value="#9ACD32"></option>
+                                    <option value="#32CD32"></option>
+                                    <option value="#00FF00"></option>
+                                    <option value="#7CFC00"></option>
+                                    <option value="#7FFF00"></option>
+                                    <option value="#ADFF2F"></option>
+                                    <option value="#00FF7F"></option>
+                                    <option value="#00FA9A"></option>
+                                    <option value="#90EE90"></option>
+                                    <option value="#98FB98"></option>
+                                    <option value="#8FBC8F"></option>
+                                    <option value="#66CDAA"></option>
+                                    <option value="#3CB371"></option>
+                                    <option value="#2E8B57"></option>
+                                    <option value="#228B22"></option>
+                                    <option value="#008000"></option>
+                                    <option value="#006400"></option>
+                                    <option value="#00FFFF"></option>
+                                    <option value="#00FFFF"></option>
+                                    <option value="#E0FFFF"></option>
+                                    <option value="#AFEEEE"></option>
+                                    <option value="#7FFFD4"></option>
+                                    <option value="#40E0D0"></option>
+                                    <option value="#48D1CC"></option>
+                                    <option value="#00CED1"></option>
+                                    <option value="#20B2AA"></option>
+                                    <option value="#5F9EA0"></option>
+                                    <option value="#008B8B"></option>
+                                    <option value="#008080"></option>
+                                    <option value="#B0C4DE"></option>
+                                    <option value="#B0E0E6"></option>
+                                    <option value="#ADD8E6"></option>
+                                    <option value="#87CEEB"></option>
+                                    <option value="#87CEFA"></option>
+                                    <option value="#00BFFF"></option>
+                                    <option value="#1E90FF"></option>
+                                    <option value="#6495ED"></option>
+                                    <option value="#4682B4"></option>
+                                    <option value="#4169E1"></option>
+                                    <option value="#0000FF"></option>
+                                    <option value="#0000CD"></option>
+                                    <option value="#00008B"></option>
+                                    <option value="#000080"></option>
+                                    <option value="#191970"></option>
+                                    <option value="#E6E6FA"></option>
+                                    <option value="#D8BFD8"></option>
+                                    <option value="#DDA0DD"></option>
+                                    <option value="#EE82EE"></option>
+                                    <option value="#DA70D6"></option>
+                                    <option value="#FF00FF"></option>
+                                    <option value="#FF00FF"></option>
+                                    <option value="#BA55D3"></option>
+                                    <option value="#9370DB"></option>
+                                    <option value="#8A2BE2"></option>
+                                    <option value="#9400D3"></option>
+                                    <option value="#9932CC"></option>
+                                    <option value="#8B008B"></option>
+                                    <option value="#800080"></option>
+                                    <option value="#4B0082"></option>
+                                    <option value="#483D8B"></option>
+                                    <option value="#6A5ACD"></option>
+                                    <option value="#7B68EE"></option>
+                                    <option value="#FFFFFF"></option>
+                                    <option value="#FFFAFA"></option>
+                                    <option value="#F0FFF0"></option>
+                                    <option value="#F5FFFA"></option>
+                                    <option value="#F0FFFF"></option>
+                                    <option value="#F0F8FF"></option>
+                                    <option value="#F8F8FF"></option>
+                                    <option value="#F5F5F5"></option>
+                                    <option value="#FFF5EE"></option>
+                                    <option value="#F5F5DC"></option>
+                                    <option value="#FDF5E6"></option>
+                                    <option value="#FFFAF0"></option>
+                                    <option value="#FFFFF0"></option>
+                                    <option value="#FAEBD7"></option>
+                                    <option value="#FAF0E6"></option>
+                                    <option value="#FFF0F5"></option>
+                                    <option value="#FFE4E1"></option>
+                                    <option value="#DCDCDC"></option>
+                                    <option value="#D3D3D3"></option>
+                                    <option value="#C0C0C0"></option>
+                                    <option value="#A9A9A9"></option>
+                                    <option value="#808080"></option>
+                                    <option value="#696969"></option>
+                                    <option value="#778899"></option>
+                                    <option value="#708090"></option>
+                                    <option value="#2F4F4F"></option>
+                                </select>
                             </p>
                         </div>
 
@@ -224,6 +366,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscolor/2.0.4/jscolor.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/jquery-simplecolorpicker@0.3.1/jquery.simplecolorpicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.7/jquery.autocomplete.js"></script>
+
     <script>
         var HandlebarsTemplates = {
             'workflows/associated_resource_form': Handlebars.compile(document.getElementById('workflows/associated_resource_form').innerHTML),
@@ -242,6 +387,54 @@
         $(window).unbind('beforeunload', Workflows.promptBeforeLeaving);
         $(window).bind('page:before-change', Workflows.promptBeforeLeaving);
         $(window).bind('beforeunload', Workflows.promptBeforeLeaving);
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#simple-colour-picker').simplecolorpicker();
+
+            $('#simple-colour-picker').on('change', function (e) {
+                var valueSelected = this.value.toUpperCase();
+                $('#node-modal-form-colour').val(valueSelected);
+                $('#node-modal-form-colour')[0].jscolor.fromString(valueSelected);
+            });
+        });
+    </script>
+
+
+    <script>
+        $(document).on('click', '.delete-list-item', function () {
+            $(this).parents('li').remove();
+            return false;
+        });
+
+
+        $(document).ready(function () {
+            $('#term-autocomplete').autocomplete({
+                serviceUrl: 'http://193.40.11.103/edam/operations', // https://tess.elixir-europe.org/edam/operations
+                dataType: 'json',
+                deferRequestBy: 150,
+                paramName: 'filter',
+                transformResult: function (response) {
+                    // console.log(response);
+                    return {
+                        suggestions: $.map(response, function (item) {
+                            return {value: item['Preferred Label'], data: item};
+                        })
+                    };
+                },
+                onSelect: function (suggestion) {
+                    $(this).val('');
+                    Workflows.ontologyTerms.add(suggestion);
+                },
+                onSearchStart: function () {
+                    $(this).addClass('loading');
+                },
+                onSearchComplete: function () {
+                    $(this).removeClass('loading');
+                }
+            });
+        });
     </script>
 
     <!-- Reload on save -->

@@ -436,14 +436,15 @@ var Workflows = {
             var template = HandlebarsTemplates['workflows/ontology_term_form'];
 
             $('#node-modal-ontology-terms-list').append(template({
-                label: suggestion.data.preferred_label,
-                uri: suggestion.data.uri
+                label: suggestion.data['Preferred Label'],
+                uri: suggestion.data['Class ID']
             }));
 
             return false;
         },
 
         delete: function () {
+            console.log(111);
             $(this).parents('.ontology-term').remove();
             return false;
         },
