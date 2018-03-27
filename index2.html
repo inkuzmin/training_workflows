@@ -263,7 +263,7 @@
         </div>
         <div class="workflow-diagram-container">
             <div id="workflow-diagram-content">
-                <div id="cy" data-editable="true" data-workflow-type="EducationalResource" data-hide-child-nodes="false">
+                <div id="cy" data-editable="true" data-workflow-type="ConceptMap" data-hide-child-nodes="false">
                 </div>
                 <script id="workflow-content-json" type="application/json" data-tess-id="123">
                   null
@@ -428,29 +428,122 @@
         </div>
     </script>
 
-
     <script id="workflows/fields/edam_operation" type="text/x-handlebars-template">
+        <div class="form-group" data-field-type="text">
+            <label for="node-modal-form-title">{{ name }}
+                {{#if required}}
+                <span class="muted">(required)</span>
+                {{/if}}
 
+            </label>
+
+            {{#each forms}}
+            <input type="text" class="form-control" placeholder="{{ name }}" value="{{this}}">
+            {{/each}}
+
+
+            {{#if multiple}}
+            <button class="btn btn-default form-repeat">
+                Add
+            </button>
+            <button class="btn btn-default form-remove">
+                Remove
+            </button>
+            {{/if}}
+        </div>
     </script>
 
     <script id="workflows/fields/edam_input" type="text/x-handlebars-template">
+        <div class="form-group" data-field-type="text">
+            <label for="node-modal-form-title">{{ name }}
+                {{#if required}}
+                <span class="muted">(required)</span>
+                {{/if}}
 
+            </label>
+
+            {{#each forms}}
+            <input type="text" class="form-control" placeholder="{{ name }}" value="{{this}}">
+            {{/each}}
+
+
+            {{#if multiple}}
+            <button class="btn btn-default form-repeat">
+                Add
+            </button>
+            <button class="btn btn-default form-remove">
+                Remove
+            </button>
+            {{/if}}
+        </div>
     </script>
 
     <script id="workflows/fields/edam_output" type="text/x-handlebars-template">
+        <div class="form-group" data-field-type="text">
+            <label for="node-modal-form-title">{{ name }}
+                {{#if required}}
+                <span class="muted">(required)</span>
+                {{/if}}
 
+            </label>
+
+            {{#each forms}}
+            <input type="text" class="form-control" placeholder="{{ name }}" value="{{this}}">
+            {{/each}}
+
+
+            {{#if multiple}}
+            <button class="btn btn-default form-repeat">
+                Add
+            </button>
+            <button class="btn btn-default form-remove">
+                Remove
+            </button>
+            {{/if}}
+        </div>
     </script>
 
     <script id="workflows/fields/edam_format" type="text/x-handlebars-template">
+        <div class="form-group" data-field-type="text">
+            <label for="node-modal-form-title">{{ name }}
+                {{#if required}}
+                <span class="muted">(required)</span>
+                {{/if}}
 
+            </label>
+
+            {{#each forms}}
+            <input type="text" class="form-control" placeholder="{{ name }}" value="{{this}}">
+            {{/each}}
+
+
+            {{#if multiple}}
+            <button class="btn btn-default form-repeat">
+                Add
+            </button>
+            <button class="btn btn-default form-remove">
+                Remove
+            </button>
+            {{/if}}
+        </div>
     </script>
 
     <script id="workflows/fields/boolean" type="text/x-handlebars-template">
+        <div class="form-group" data-field-type="text">
+            <label for="node-modal-form-title">{{ name }}
+                {{#if required}}
+                <span class="muted">(required)</span>
+                {{/if}}
+                <div class="radio">
+                    <label><input type="radio" name="{{ name }}">Yes</label>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="{{ name }}">No</label>
+                </div>
+            </label>
 
+        </div>
     </script>
-
-
-
 
     <!-- Vendor scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>

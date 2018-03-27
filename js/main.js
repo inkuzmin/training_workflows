@@ -63,9 +63,11 @@ var Workflows = {
         if (parentId && Workflows.selected.children().length > 0)
             pos.y = Workflows.selected.children().last().position().y + 40;
 
-        Workflows.nodeModal.populate(parentId ? 'Add child node' : 'Add node', { parent: parentId }, pos);
+        Workflows.fairy.populate(pos);
+        Workflows.fairy.current += 1;
+        // Workflows.sidebar2.populate(parentId ? 'Add child node' : 'Add node', { parent: parentId }, pos);
 
-        $('#node-modal').modal('show');
+        // $('#node-modal').modal('show');
     },
 
     addNode: function () {
@@ -131,7 +133,7 @@ var Workflows = {
     },
 
     createLink: function (e) {
-        Workflows.history.modify('link', function () {
+        // Workflows.history.modify('link', function () {
             e.cy.add({
                 group: "edges",
                 data: {
@@ -139,7 +141,7 @@ var Workflows = {
                     target: e.target.data('id')
                 }
             });
-        });
+        // });
 
         Workflows.cancelState();
     },
@@ -224,11 +226,367 @@ var Workflows = {
         }
     },
 
+    sidebar2: {
+        init: function () {
+            var sidebar = $('#workflow-diagram-sidebar');
+        },
+        populate: function(e){
+
+            if (e.target.isNode()) {
+
+
+
+                $('#workflow-diagram-sidebar-title').html(e.target.data('name') || '<span class="muted">Untitled</span>')
+                    .css('background-color', e.target.data('color'))
+                    .css('color', e.target.data('font_color'));
+
+                var $desk = $('#workflow-diagram-sidebar-desc').html("");
+
+                var children = e.target.descendants();
+
+                for (var i = 0; i < children.length; i++) {
+                    (function(child) {
+                        // params
+                        var field = {
+                            type: child.data('type'),
+                            name: child.data('name'),
+                            required: child.data('required'),
+                            multiple: child.data('multiple'),
+                            forms: child.data('forms')
+                        };
+
+                        var $fieldNode = $(HandlebarsTemplates['workflows/fields/' + field.type](field));
+
+                        $fieldNode.find(".form-repeat").click(function () {
+                            var $input = $('<input type="text" class="form-control">');
+                            $input.insertAfter($(this).parent().find('input').last());
+
+                            (function(i){
+                                $input.keydown(function () {
+                                    field.forms[i] = $input.val();
+                                    console.log( field.forms );
+                                });
+                            })(field.forms.length);
+
+                            field.forms.push("");
+
+                            $input.focus();
+                        });
+
+                        $fieldNode.find(".form-remove").click(function () {
+                            $(this).parent().find('input').last().remove();
+                            field.forms.pop();
+                        });
+
+                        $fieldNode.find('input').each(function (i, el) {
+                            $(el).keydown(function () {
+                                field.forms[i] = $(el).val();
+                                console.log( field.forms );
+                            });
+                        });
+
+                        $desk.append($fieldNode);
+
+                        if (field.type === "edam_operation") {
+                            $fieldNode.find('input').autocomplete({
+                                serviceUrl: 'http://193.40.11.103/edam/operations', // https://tess.elixir-europe.org/edam/operations
+                                dataType: 'json',
+                                deferRequestBy: 150,
+                                paramName: 'filter',
+                                transformResult: function (response) {
+                                    // console.log(response);
+                                    return {
+                                        suggestions: $.map(response, function (item) {
+                                            return {value: item['Preferred Label'], data: item};
+                                        })
+                                    };
+                                },
+                                onSelect: function (suggestion) {
+                                    $(this).val('');
+                                    $fieldNode.find('input').val(suggestion.value);
+                                    Workflows.ontologyTerms.add(suggestion);
+                                },
+                                onSearchStart: function () {
+                                    $(this).addClass('loading');
+                                },
+                                onSearchComplete: function () {
+                                    $(this).removeClass('loading');
+                                }
+                            });
+                        }
+
+                        if (field.type === "edam_input" || field.type === "edam_output") {
+                            $fieldNode.find('input').autocomplete({
+                                serviceUrl: 'http://193.40.11.103/edam/data', // https://tess.elixir-europe.org/edam/operations
+                                dataType: 'json',
+                                deferRequestBy: 150,
+                                paramName: 'filter',
+                                transformResult: function (response) {
+                                    // console.log(response);
+                                    return {
+                                        suggestions: $.map(response, function (item) {
+                                            return {value: item['Preferred Label'], data: item};
+                                        })
+                                    };
+                                },
+                                onSelect: function (suggestion) {
+                                    $(this).val('');
+                                    $fieldNode.find('input').val(suggestion.value);
+                                    Workflows.ontologyTerms.add(suggestion);
+                                },
+                                onSearchStart: function () {
+                                    $(this).addClass('loading');
+                                },
+                                onSearchComplete: function () {
+                                    $(this).removeClass('loading');
+                                }
+                            });
+                        }
+
+                        if (field.type === "edam_format") {
+                            $fieldNode.find('input').autocomplete({
+                                serviceUrl: 'http://193.40.11.103/edam/formats', // https://tess.elixir-europe.org/edam/operations
+                                dataType: 'json',
+                                deferRequestBy: 150,
+                                paramName: 'filter',
+                                transformResult: function (response) {
+                                    // console.log(response);
+                                    return {
+                                        suggestions: $.map(response, function (item) {
+                                            return {value: item['Preferred Label'], data: item};
+                                        })
+                                    };
+                                },
+                                onSelect: function (suggestion) {
+                                    $(this).val('');
+                                    $fieldNode.find('input').val(suggestion.value);
+                                    Workflows.ontologyTerms.add(suggestion);
+                                },
+                                onSearchStart: function () {
+                                    $(this).addClass('loading');
+                                },
+                                onSearchComplete: function () {
+                                    $(this).removeClass('loading');
+                                }
+                            });
+                        }
+
+                    })(children[i]);
+                }
+
+            }
+            else {
+                console.log(123);
+            }
+        }
+
+
+    },
+
+    fairy: {
+        current: 0, // FIXME
+        params: {}, // configuration of the current node type
+
+        init: function(config) {
+                var nodeTypeWrap = config['NodeTypes'][0];
+                var nodeTypeName = Object.keys(nodeTypeWrap)[0];
+                var nodeType = nodeTypeWrap[nodeTypeName];
+
+                var name = nodeType['NodeTypeName'];
+                var colour = nodeType['Colour'] || "#bbbbbb"; // default
+                var fontColour = nodeType['FontColour'] || "#00082b"; // default
+                var promptPosition = nodeType['PromptPosition'];
+                var required = nodeType['Required'];
+                var multiple = nodeType['Multiple'];
+
+                var fields = _.map(nodeType['Fields'], function(data, i) {
+                    var type;
+                    switch (data['DataType']) {
+                        case "Text":
+                            type = "text";
+                            break;
+                        case "MultipleChoice":
+                            type = "multichoice";
+                            break;
+                        case "OperationOntologyTerm":
+                            type = "edam_operation";
+                            break;
+                        case "InputTypeOntologyTerm":
+                            type = "edam_input";
+                            break;
+                        case "OutputTypeOntologyTerm":
+                            type = "edam_output";
+                            break;
+                        case "FormatTypeOntologyTerm":
+                            type = "edam_format";
+                            break;
+                        case "boolean":
+                            type = "boolean";
+                            break;
+
+                    }
+
+
+                    return {
+                        type: type,
+                        name: data['FieldName'],
+                        required: data['Required'],
+                        multiple: data['Multiple'],
+                        markdown: data['MarkdownFormatting']
+                    }
+                });
+
+                // render form
+                Workflows.fairy.params = {
+                    name:  name,
+                    color: colour,
+                    font_color: fontColour,
+                    fields: fields,
+                    promptPosition: 0,
+                    required: required,
+                    multiple: multiple
+                };
+        },
+
+        populate: function(position) {
+
+            var params = Workflows.fairy.params;
+
+            cy.add({
+                data: {
+                    id: "node-" + Workflows.fairy.current,
+                    name: params.name,
+                    color: params.color,
+                    font_color: params.font_color
+                }
+            });
+
+            if (Workflows.wizard.current > 0) { // add property like "connected"
+                cy.add({
+                    group: "edges",
+                    data: {
+                        source: "node-" + (Workflows.fairy.current-1),
+                        target: "node-" + Workflows.fairy.current
+                    }
+                });
+            }
+
+            _.each(params.fields, function (field, i) {
+                cy.add({
+                    data: {
+                        parent: "node-" + Workflows.fairy.current,
+                        id: "node-" + Workflows.fairy.current + "-" + i,
+                        name: field.name,
+                        color: params.color,
+                        font_color: params.font_color,
+                        type: field.type, // Text -> MultiText?
+                        required: field.required,
+                        multiple: field.multiple,
+                        forms: field.type == 'multiple' ? ["", ""] : [""] // FIXME: hack
+                    },
+                    position: { // TODO: use layouts here?
+                        x: position.x,
+                        y: position.y + (i * 50)
+                    }
+                });
+
+                if (i > 0) { // add property like "connected"
+                    cy.add({
+                        group: "edges",
+                        data: {
+                            source: "node-" + Workflows.fairy.current + "-" + (i-1),
+                            target: "node-" + Workflows.fairy.current + "-" + i
+                        }
+                    });
+                }
+            });
+
+            Workflows.cancelState();
+            cy.$(':selected').unselect();
+            cy.$('#' + "node-" + Workflows.fairy.current).select();
+
+        }
+    },
+
+    wizard: {
+        current: 0,
+
+        populate: function(params) {
+
+            cy.add({
+                data: {
+                    id: "node-" + Workflows.wizard.current,
+                    name: params.name,
+                    color: params.color,
+                    font_color: params.font_color
+                }
+            });
+
+            if (Workflows.wizard.current > 0) { // add property like "connected"
+                cy.add({
+                    group: "edges",
+                    data: {
+                        source: "node-" + (Workflows.wizard.current-1),
+                        target: "node-" + Workflows.wizard.current
+                    }
+                });
+            }
+
+            _.each(params.fields, function (field, i) {
+                        cy.add({
+                            data: {
+                                parent: "node-" + Workflows.wizard.current,
+                                id: "node-" + Workflows.wizard.current + "-" + i,
+                                name: field.name,
+                                color: params.color,
+                                font_color: params.font_color,
+                                type: field.type, // Text -> MultiText?
+                                required: field.required,
+                                multiple: field.multiple,
+                                forms: field.type == 'multiple' ? ["", ""] : [""] // FIXME: hack
+                            },
+                            position: { // TODO: use layouts here?
+                                x: parseInt( Workflows.wizard.current * 200 ),
+                                y: parseInt( (i * 50) )
+                            }
+                        });
+
+                        if (i > 0) { // add property like "connected"
+                            cy.add({
+                                group: "edges",
+                                data: {
+                                    source: "node-" + Workflows.wizard.current + "-" + (i-1),
+                                    target: "node-" + Workflows.wizard.current + "-" + i
+                                }
+                            });
+                        }
+            });
+
+
+            $("#workflow-diagram-sidebar-next").unbind("click.next");
+            $("#workflow-diagram-sidebar-repeat").unbind("click.repeat");
+
+            $("#workflow-diagram-sidebar-next").bind("click.next", function() {
+                $("#workflow-diagram-sidebar-next").trigger("next-please");
+            });
+
+            $("#workflow-diagram-sidebar-repeat").bind("click.repeat", function() {
+                $("#workflow-diagram-sidebar-repeat").trigger("repeat-please");
+            });
+
+            cy.$(':selected').unselect();
+            cy.$('#' + "node-" + Workflows.wizard.current).select();
+
+            Workflows.fit();
+        }
+
+    },
+
     sidebar: {
         init: function () {
             var sidebar = $('#workflow-diagram-sidebar');
             sidebar.data('initialState', sidebar.html());
-            //sidebar.html('');
+            sidebar.html('');
         },
 
         populate: function (e) {
@@ -467,6 +825,16 @@ var Workflows = {
                 );
             }
         }
+    },
+
+    fit: function() {
+        // cy.panzoom();
+        var defaultZoom = cy.maxZoom();
+        cy.maxZoom(2);
+        cy.fit(50);
+        cy.maxZoom(defaultZoom);
+        cy.center();
+        cy.resize();
     }
 };
 
@@ -475,11 +843,12 @@ $(document).ready(function () {
     var wfJsonElement = $('#workflow-content-json');
     var cytoscapeElement = $('#cy');
     var editable = cytoscapeElement.data('editable');
-    console.log(editable);
+    var wfType = cytoscapeElement.data('workflow-type');
 
     var hideChildNodes = cytoscapeElement.data('hideChildNodes');
 
-    console.log(123)
+
+    var wfConfig = YAML.load('WorkflowConfig.yml');
 
     if (wfJsonElement.length && cytoscapeElement.length) {
 
@@ -565,71 +934,253 @@ $(document).ready(function () {
             autolock: !editable
         });
 
-        console.log(123)
         if (editable) {
 
-            console.log(123)
+            // check if wf type is known (i.e. there is such field in the WorkflowConfig.yml)
+            if (wfConfig.hasOwnProperty(wfType)) {
+                var config = wfConfig[wfType];
 
-            // Bind events
-            $('#workflow-toolbar-add').click(Workflows.setAddNodeState);
-            $('#workflow-toolbar-cancel').click(Workflows.cancelState);
-            $('#workflow-toolbar-edit').click(Workflows.edit);
-            $('#workflow-toolbar-link').click(Workflows.setLinkNodeState);
-            $('#workflow-toolbar-undo').click(Workflows.history.undo);
-            $('#workflow-toolbar-redo').click(Workflows.history.redo);
-            $('#workflow-toolbar-add-child').click(Workflows.addChild);
-            $('#workflow-toolbar-delete').click(Workflows.delete);
-            $('#node-modal-form-confirm').click(Workflows.nodeModalConfirm);
-            $('#edge-modal-form-confirm').click(Workflows.edgeModalConfirm);
-            $('.node-modal-add-resource-btn').click(Workflows.associatedResources.add);
-            $('#node-modal')
-                .on('hide.bs.modal', Workflows.cancelState)
-                .on('click', '.delete-associated-resource', Workflows.associatedResources.delete)
-                .on('click', '.delete-ontology-term', Workflows.ontologyTerms.delete);
+                // Show somewhere typename
+                var wfTypeName = config['WorkflowTypeName'];
+                console.log("workflow type is", wfTypeName);
 
-            $('#edge-modal').on('hide.bs.modal', Workflows.cancelState);
+                // Decorate editor
+                var hideToolbar = config['ConfigOptions']['hideToolbar'];
+                var allowNodeReposition = config['ConfigOptions']['allowNodeReposition'];
+                var wizard = config['ConfigOptions']['wizard'];
 
-            $('.workflow-diagram-wrapper .modal').keydown(function (event) {
-                if(event.target.tagName != 'TEXTAREA') {
-                    if (event.keyCode == 13) {
-                        event.preventDefault();
-                        return false;
+                if (hideToolbar) {
+                    $('#workflow-toolbar > a.btn').hide();
+                } else {
+                    $('#workflow-toolbar > a.btn').show();
+                }
+
+                // cy.$(':selected').unselect();
+                // cy.on('tap', Workflows.handleClick);
+                // cy.on('select', function (e) {
+                //     if (Workflows.state !== 'adding node') {
+                //         Workflows.select(e.target);
+                //     }
+                // });
+                // cy.on('unselect', Workflows.cancelState);
+                // cy.on('drag', function () {
+                //     Workflows._dragged = true;
+                // });
+                // cy.on('free', function () {
+                //     if (Workflows._dragged) {
+                //         Workflows.history.modify('move node');
+                //         Workflows._dragged = false;
+                //     }
+                // });
+
+
+                if (wizard) {
+                    cy.on('select', Workflows.sidebar2.populate);
+
+                    var currentNode = 0;
+                    var totalNodes = config['NodeTypes'].length;
+
+                    function renderNode(n) {
+                        var nodeTypeWrap = config['NodeTypes'][n];
+                        var nodeTypeName = Object.keys(nodeTypeWrap)[0];
+                        var nodeType = nodeTypeWrap[nodeTypeName];
+
+                        var name = nodeType['NodeTypeName'];
+                        var colour = nodeType['Colour'] || "#bbbbbb"; // default
+                        var fontColour = nodeType['FontColour'] || "#00082b"; // default
+                        var promptPosition = nodeType['PromptPosition'];
+                        var required = nodeType['Required'];
+                        var multiple = nodeType['Multiple'];
+
+                        var fields = _.map(nodeType['Fields'], function(data, i) {
+                            var type;
+                            switch (data['DataType']) {
+                                case "Text":
+                                    type = "text";
+                                    break;
+                                case "MultipleChoice":
+                                    type = "multichoice";
+                                    break;
+                                case "OperationOntologyTerm":
+                                    type = "edam_operation";
+                                    break;
+                                case "InputTypeOntologyTerm":
+                                    type = "edam_input";
+                                    break;
+                                case "OutputTypeOntologyTerm":
+                                    type = "edam_output";
+                                    break;
+                                case "FormatTypeOntologyTerm":
+                                    type = "edam_format";
+                                    break;
+                                case "boolean":
+                                    type = "boolean";
+                                    break;
+
+                            }
+
+
+                            return {
+                                type: type,
+                                name: data['FieldName'],
+                                required: data['Required'],
+                                multiple: data['Multiple'],
+                                markdown: data['MarkdownFormatting']
+                            }
+                        });
+
+                        // render form
+                        Workflows.wizard.populate({
+                            name:  name,
+                            color: colour,
+                            font_color: fontColour,
+                            fields: fields,
+                            promptPosition: n,
+                            required: required,
+                            multiple: multiple
+                        });
                     }
+                    renderNode(currentNode);
+
+                    $("#workflow-diagram-sidebar-next").bind("next-please", function(){
+                        Workflows.wizard.current += 1;
+                        if (currentNode < totalNodes - 1) {
+                            currentNode += 1;
+                            renderNode(currentNode);
+                        }
+                    });
+
+                    $("#workflow-diagram-sidebar-repeat").bind("repeat-please", function(){
+                        Workflows.wizard.current += 1;
+                        renderNode(currentNode);
+                    });
+                } else {
+                    cy.on('select', Workflows.sidebar2.populate);
+
+                    Workflows.fairy.init(config);
+
+                    $('#workflow-toolbar-add').click(Workflows.setAddNodeState);
+                    $('#workflow-toolbar-cancel').click(Workflows.cancelState);
+                    $('#workflow-toolbar-edit').click(Workflows.edit);
+                    $('#workflow-toolbar-link').click(Workflows.setLinkNodeState);
+                    $('#workflow-toolbar-undo').hide();
+                    $('#workflow-toolbar-redo').hide();
+                    // $('#workflow-toolbar-add-child').click(Workflows.addChild);
+                    $('#workflow-toolbar-delete').click(Workflows.delete);
+
+                    cy.$(':selected').unselect();
+                    cy.on('tap', Workflows.handleClick);
+                    cy.on('select', function (e) {
+                        if (Workflows.state !== 'adding node') {
+                            Workflows.select(e.target);
+                        }
+                    });
+                    cy.on('unselect', Workflows.cancelState);
+                    cy.on('drag', function () {
+                        Workflows._dragged = true;
+                    });
+                    cy.on('free', function () {
+                        if (Workflows._dragged) {
+                            // Workflows.history.modify('move node');
+                            Workflows._dragged = false;
+                        }
+                    });
+
+                    // cy.$(':selected').unselect();
+                    // cy.on('select', Workflows.sidebar.populate);
+                    //
+                    // Workflows.cancelState();
+                    // Workflows.history.initialize();
                 }
-            });
 
-            // Update JSON in form
-            $('.workflow-form-submit').click(function () {
-                $('#workflow_workflow_content').val(JSON.stringify(cy.json()['elements']));
-                Workflows.formSubmitted = true;
 
-                return true;
-            });
+                // $("#workflow-diagram-sidebar-previous").click(function(){
+                //     if (currentNode > 0) {
+                //         currentNode -= 1;
+                //         renderNode(currentNode);
+                //     }
+                // });
 
-            cy.on('tap', Workflows.handleClick);
-            cy.on('select', function (e) {
-                if (Workflows.state !== 'adding node') {
-                    Workflows.select(e.target);
-                }
-            });
-            cy.on('unselect', Workflows.cancelState);
-            cy.on('drag', function () {
-                Workflows._dragged = true;
-            });
-            cy.on('free', function () {
-                if (Workflows._dragged) {
-                    Workflows.history.modify('move node');
-                    Workflows._dragged = false;
-                }
-            });
-            cy.$(':selected').unselect();
-            cy.on('select', Workflows.sidebar.populate);
 
-            // Initialize
-            Workflows.cancelState();
-            Workflows.history.initialize();
-            jscolor.installByClassName('jscolor');
+
+
+
+                console.log(wfConfig);
+
+            }
+
+            /*
+            switch (wfType) {
+                case "EducationalResource":
+                    Workflows.editor.init('EducationalResource');
+
+
+                    break;
+                default:
+                    // Bind events
+                    $('#workflow-toolbar-add').click(Workflows.setAddNodeState);
+                    $('#workflow-toolbar-cancel').click(Workflows.cancelState);
+                    $('#workflow-toolbar-edit').click(Workflows.edit);
+                    $('#workflow-toolbar-link').click(Workflows.setLinkNodeState);
+                    $('#workflow-toolbar-undo').click(Workflows.history.undo);
+                    $('#workflow-toolbar-redo').click(Workflows.history.redo);
+                    $('#workflow-toolbar-add-child').click(Workflows.addChild);
+                    $('#workflow-toolbar-delete').click(Workflows.delete);
+                    $('#node-modal-form-confirm').click(Workflows.nodeModalConfirm);
+                    $('#edge-modal-form-confirm').click(Workflows.edgeModalConfirm);
+                    $('.node-modal-add-resource-btn').click(Workflows.associatedResources.add);
+                    $('#node-modal')
+                        .on('hide.bs.modal', Workflows.cancelState)
+                        .on('click', '.delete-associated-resource', Workflows.associatedResources.delete)
+                        .on('click', '.delete-ontology-term', Workflows.ontologyTerms.delete);
+
+                    $('#edge-modal').on('hide.bs.modal', Workflows.cancelState);
+
+                    $('.workflow-diagram-wrapper .modal').keydown(function (event) {
+                        if(event.target.tagName != 'TEXTAREA') {
+                            if (event.keyCode == 13) {
+                                event.preventDefault();
+                                return false;
+                            }
+                        }
+                    });
+
+                    // Update JSON in form
+                    $('.workflow-form-submit').click(function () {
+                        $('#workflow_workflow_content').val(JSON.stringify(cy.json()['elements']));
+                        Workflows.formSubmitted = true;
+
+                        return true;
+                    });
+
+                    cy.on('tap', Workflows.handleClick);
+                    cy.on('select', function (e) {
+                        if (Workflows.state !== 'adding node') {
+                            Workflows.select(e.target);
+                        }
+                    });
+                    cy.on('unselect', Workflows.cancelState);
+                    cy.on('drag', function () {
+                        Workflows._dragged = true;
+                    });
+                    cy.on('free', function () {
+                        if (Workflows._dragged) {
+                            Workflows.history.modify('move node');
+                            Workflows._dragged = false;
+                        }
+                    });
+                    cy.$(':selected').unselect();
+                    cy.on('select', Workflows.sidebar.populate);
+
+                    // Initialize
+                    Workflows.cancelState();
+                    Workflows.history.initialize();
+                    jscolor.installByClassName('jscolor');
+                    break;
+            }
+            */
         } else {
+            console.log('debug');
             // Hiding/revealing of child nodes
             if(hideChildNodes) {
                 cy.style()
@@ -647,10 +1198,10 @@ $(document).ready(function () {
             });
         }
 
-        Workflows.sidebar.init();
-        cy.on('unselect', Workflows.sidebar.clear);
-        cy.$(':selected').unselect();
-        Workflows.loadLastSelection();
+        // Workflows.sidebar.init();
+        // cy.on('unselect', Workflows.sidebar.clear);
+        // cy.$(':selected').unselect();
+        // Workflows.loadLastSelection();
 
         cy.panzoom();
         var defaultZoom = cy.maxZoom();
@@ -669,5 +1220,7 @@ $(document).ready(function () {
     }
 
 
+
 });
+
 
