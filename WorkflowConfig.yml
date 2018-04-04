@@ -11,7 +11,7 @@ EducationalResource:
         FontColour: "#ffffff"
         PromptPosition: 1
         Required: true
-        Multiple: true
+        Multiple: false
         Fields:
           - LearningOutcomes:
             FieldName: Learning Outcomes
@@ -62,7 +62,7 @@ EducationalResource:
         FontColour: "#ffffff"
         PromptPosition: 3
         Required: false
-        Multiple: false
+        Multiple: true
         Fields:
           - QuizQuestion:
             FieldName: Quiz Question
@@ -134,7 +134,7 @@ ConceptMap:
             InfoText: Is this a necessary step of the workflow or can it be skipped.
             Required: true
             Multiple: false
-            DataType: boolean
+            DataType: Boolean
             MarkdownFormatting: false
           - RequiredConditions:
             FieldName: Required Conditions

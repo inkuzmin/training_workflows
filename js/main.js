@@ -31,9 +31,11 @@ var Workflows = {
         }
 
         $('#workflow-status-message').html('').hide();
-        $('#workflow-status-selected-node').html('<span class="muted">Nothing selected</span>').attr('title', '');
+        // $('#workflow-status-selected-node').html('<span class="muted">Nothing selected</span>').attr('title', '');
         $('#workflow-status-bar').find('.node-context-button').hide();
         $('#workflow-toolbar-cancel').hide();
+
+        Workflows.sidebar2.clear();
     },
 
     select: function (target) {
@@ -52,6 +54,16 @@ var Workflows = {
         }
     },
 
+    select2: function (target) {
+        console.log(111);
+        if (target.isNode()) {
+            Workflows.selected = target;
+            $('#workflow-status-bar').find('.node-context-button').show();
+        } else if (target.isEdge()) {
+            Workflows.selected = target;
+        }
+    },
+
     setAddNodeState: function () {
         Workflows.cancelState();
         Workflows.setState('adding node', 'Click on the diagram to add a new node.');
@@ -63,8 +75,8 @@ var Workflows = {
         if (parentId && Workflows.selected.children().length > 0)
             pos.y = Workflows.selected.children().last().position().y + 40;
 
-        Workflows.fairy.populate(pos);
-        Workflows.fairy.current += 1;
+        Workflows.controller.populate(pos);
+        // Workflows.controller.counter += 1;
         // Workflows.sidebar2.populate(parentId ? 'Add child node' : 'Add node', { parent: parentId }, pos);
 
         // $('#node-modal').modal('show');
@@ -157,13 +169,14 @@ var Workflows = {
     },
 
     promptBeforeLeaving: function (e) {
+        /*
         if ($("#workflow-diagram-content #cy[data-editable='true']").length > 0) {
             if (Workflows.history.index > 0 && !Workflows.formSubmitted) {
                 return confirm('You have unsaved changes, are you sure you wish to leave the page?');
             } else {
                 e = null;
             }
-        }
+        }*/
     },
 
     storeLastSelection: function () {
@@ -230,62 +243,187 @@ var Workflows = {
         init: function () {
             var sidebar = $('#workflow-diagram-sidebar');
         },
+        highlight: function (id, color) {
+            $('#workflow-diagram-sidebar-desc').find("#" + id).addClass("highlighted");
+            $('#workflow-diagram-sidebar-desc').find("#" + id).css("border-color", color);
+        },
+        unhighlight: function() {
+            $('#workflow-diagram-sidebar-desc').find(".highlighted").removeClass("highlighted");
+        },
+        clear: function () {
+            $('#workflow-diagram-sidebar-title').html('<span class="muted">Nothing is selected</span>')
+                .css('background-color', "")
+                .css('color', "");
+            $('#workflow-diagram-sidebar-desc').html("");
+
+            $("#workflow-diagram-sidebar-repeat").hide();
+            $("#workflow-diagram-sidebar-next").hide();
+        },
+
         populate: function(e){
 
             if (e.target.isNode()) {
 
+                var target;
+                if (e.target.data('type') === "node") {
+                    target = e.target;
+                } else if (e.target.data('type') === "field") {
+                    target = e.target.ancestors()[0];
+                }
 
-
-                $('#workflow-diagram-sidebar-title').html(e.target.data('name') || '<span class="muted">Untitled</span>')
-                    .css('background-color', e.target.data('color'))
-                    .css('color', e.target.data('font_color'));
+                $('#workflow-diagram-sidebar-title').html(target.data('name') || '<span class="muted">Untitled</span>')
+                    .css('background-color', target.data('color'))
+                    .css('color', target.data('font_color'));
 
                 var $desk = $('#workflow-diagram-sidebar-desc').html("");
 
-                var children = e.target.descendants();
+                $("#workflow-diagram-sidebar-next").show();
+
+                if (target.data('multiple')) {
+                    $("#workflow-diagram-sidebar-repeat").show();
+                } else {
+                    $("#workflow-diagram-sidebar-repeat").hide();
+                }
+
+                var children = target.descendants();
 
                 for (var i = 0; i < children.length; i++) {
                     (function(child) {
                         // params
                         var field = {
-                            type: child.data('type'),
+                            type: child.data('datatype'),
                             name: child.data('name'),
                             required: child.data('required'),
                             multiple: child.data('multiple'),
-                            forms: child.data('forms')
+                            forms: child.data('forms'),
+                            info: child.data('info'),
+                            id: child.data('id'),
+                            correct: child.data('correct')
                         };
+
+                        // console.log(field);
 
                         var $fieldNode = $(HandlebarsTemplates['workflows/fields/' + field.type](field));
 
+                        $fieldNode.find(".check").each(function(i, el) {
+                            console.log(i);
+                            if (field.correct.indexOf(i) !== -1) {
+                                $(el).attr("checked", "checked");
+                            }
+                        });
+
                         $fieldNode.find(".form-repeat").click(function () {
-                            var $input = $('<input type="text" class="form-control">');
+                            var $input = $('<input type="text" class="form-control field">');
+
+
+                            if (field.type === "multichoice") {
+                                // $input.prepend("<label class=\"muted\"><input type='checkbox' /> mark as correct</label>")
+                                var $input = $('<div class="field"><label class="muted"><input class="check" type="checkbox" /> mark as correct</label><input type="text" class="form-control"></div>');
+                            }
+
                             $input.insertAfter($(this).parent().find('input').last());
 
+
+
                             (function(i){
-                                $input.keydown(function () {
-                                    field.forms[i] = $input.val();
-                                    console.log( field.forms );
+
+                                if (field.type === "multichoice") {
+                                    $input.find('input[type="text"]').keyup(function () {
+                                        field.forms[i] = $(this).val();
+                                        console.log(field.forms);
+                                    });
+                                } else {
+                                    $input.keyup(function () {
+                                        field.forms[i] = $(this).val();
+                                        console.log(field.forms);
+                                    });
+                                }
+
+                                $input.find(".check").click(function() {
+                                   if (this.checked) {
+                                       field.correct.push(i-1);
+                                   }
+                                   else {
+                                       var idx = field.correct.indexOf(i - 1);
+                                       if (idx !== -1) {
+                                           field.correct.splice(idx, 1);
+                                       }
+                                   }
+                                    console.log(field.correct);
                                 });
                             })(field.forms.length);
 
                             field.forms.push("");
 
                             $input.focus();
+
+
+                            // Update buttons
+                            if (field.forms.length <= 1) {
+                                $fieldNode.find(".form-remove").hide();
+                            } else {
+                                $fieldNode.find(".form-remove").show(500);
+                            }
+                        });
+
+                        $fieldNode.find(".form-info").click(function() {
+
+                            $(this).next().toggle(100);
+                            // $(this).next().show();
                         });
 
                         $fieldNode.find(".form-remove").click(function () {
-                            $(this).parent().find('input').last().remove();
+                            $(this).parent().find('.field').last().remove();
                             field.forms.pop();
+
+                            var i = field.forms.length - 1;
+                            var idx = field.correct.indexOf(i);
+                            if (idx !== -1) {
+                                field.correct.splice(idx, 1);
+                            }
+
+
+                            // Update buttons
+                            if (field.forms.length <= 1) {
+                                $fieldNode.find(".form-remove").hide();
+                            } else {
+                                $fieldNode.find(".form-remove").show();
+                            }
                         });
 
-                        $fieldNode.find('input').each(function (i, el) {
-                            $(el).keydown(function () {
+                        $fieldNode.find('input[type="text"]').each(function (i, el) {
+                            $(el).keyup(function () {
                                 field.forms[i] = $(el).val();
                                 console.log( field.forms );
                             });
+
                         });
 
+                        $fieldNode.find(".check").each(function(i, el) {
+
+                            $(el).click(function() {
+                                if (this.checked) {
+                                    field.correct.push(i);
+                                }
+                                else {
+                                    var idx = field.correct.indexOf(i);
+                                    if (idx !== -1) {
+                                        field.correct.splice(idx, 1);
+                                    }
+                                }
+                                console.log(field.correct);
+                            });
+
+                        });
+
+                        if (field.forms.length <= 1) {
+                            $fieldNode.find(".form-remove").hide();
+                        } else {
+                            $fieldNode.find(".form-remove").show();
+                        }
+
                         $desk.append($fieldNode);
+
 
                         if (field.type === "edam_operation") {
                             $fieldNode.find('input').autocomplete({
@@ -374,23 +512,41 @@ var Workflows = {
                     })(children[i]);
                 }
 
+                if (e.target.data('type') === "field") {
+                    // highlight field
+                    Workflows.sidebar2.unhighlight();
+                    Workflows.sidebar2.highlight(e.target.data('id'), e.target.data('color'));
+
+                }
+
+                // set buttons' events
+                $("#workflow-diagram-sidebar-next").unbind("click.next");
+                $("#workflow-diagram-sidebar-repeat").unbind("click.repeat");
+
+                $("#workflow-diagram-sidebar-next").bind("click.next", function() {
+                    $("#workflow-diagram-sidebar-next").trigger("next-please");
+                });
+
+                $("#workflow-diagram-sidebar-repeat").bind("click.repeat", function() {
+                    $("#workflow-diagram-sidebar-repeat").trigger("repeat-please");
+                });
+
             }
             else {
-                console.log(123);
+                // console.log(123);
             }
         }
 
 
     },
 
-    fairy: {
-        current: 0, // FIXME
+    controller: {
+        counter: 0, // FIXME
         params: {}, // configuration of the current node type
 
-        init: function(config) {
-                var nodeTypeWrap = config['NodeTypes'][0];
-                var nodeTypeName = Object.keys(nodeTypeWrap)[0];
-                var nodeType = nodeTypeWrap[nodeTypeName];
+        init: function(node) {
+                var nodeTypeName = Object.keys(node)[0];
+                var nodeType = node[nodeTypeName];
 
                 var name = nodeType['NodeTypeName'];
                 var colour = nodeType['Colour'] || "#bbbbbb"; // default
@@ -432,154 +588,175 @@ var Workflows = {
                         name: data['FieldName'],
                         required: data['Required'],
                         multiple: data['Multiple'],
-                        markdown: data['MarkdownFormatting']
+                        markdown: data['MarkdownFormatting'],
+                        info: data['InfoText']
                     }
                 });
 
                 // render form
-                Workflows.fairy.params = {
+                Workflows.controller.params = {
                     name:  name,
                     color: colour,
                     font_color: fontColour,
                     fields: fields,
                     promptPosition: 0,
                     required: required,
-                    multiple: multiple
+                    multiple: multiple,
+                    nodetype: nodeTypeName
                 };
+                // Workflows.controller.populate();
         },
 
-        populate: function(position) {
 
-            var params = Workflows.fairy.params;
+        populate: function(position) { // TODO: find the word reflecting the purpose of this fn
+
+            console.log(position);
+
+            var params = Workflows.controller.params;
 
             cy.add({
                 data: {
-                    id: "node-" + Workflows.fairy.current,
+                    type: "node",
+                    id: "node-" + Workflows.controller.counter,
                     name: params.name,
                     color: params.color,
-                    font_color: params.font_color
+                    font_color: params.font_color,
+                    nodetype: params.nodetype,
+                    multiple: params.multiple
                 }
             });
 
-            if (Workflows.wizard.current > 0) { // add property like "connected"
-                cy.add({
-                    group: "edges",
-                    data: {
-                        source: "node-" + (Workflows.fairy.current-1),
-                        target: "node-" + Workflows.fairy.current
+            if (position) {
+
+            } else { // if there is no position we are in sequential mode
+                // 1. check if there are successors
+
+                if (Workflows.selected) {
+                    if (Workflows.selected.descendants().length > 0) {
+                        var selected = Workflows.selected;
+                    } else {
+                        var selected = Workflows.selected.parent();
                     }
-                });
+
+
+                    if (selected.outgoers().length > 0) {
+                        var edge = selected.outgoers()[0];
+                        var outgoer = selected.outgoers()[1];
+                        var successors = selected.successors();
+
+                        edge.remove();
+
+                        cy.add({
+                            group: "edges",
+                            data: {
+                                source: selected.data('id'),
+                                target: "node-" + Workflows.controller.counter
+                            }
+                        });
+
+                        cy.add({
+                            group: "edges",
+                            data: {
+                                source: "node-" + Workflows.controller.counter,
+                                target: outgoer.data('id')
+                            }
+                        });
+
+                        successors.shift('x', 200);
+
+                        // for (var i = 0; i < successors.length; i++) {
+                        //     if (successors[i].isNode()) {
+                        //         var children = successors[i].descendants();
+                        //         for (var j = 0; j < children.length; j++) {
+                        //             children[j].position.x = children[j].position().x + 200
+                        //         }
+                        //     }
+                        // }
+
+
+                    } else {
+                        cy.add({
+                            group: "edges",
+                            data: {
+                                source: selected.data('id'),
+                                target: "node-" + Workflows.controller.counter
+                            }
+                        });
+                    }
+
+                }
             }
 
             _.each(params.fields, function (field, i) {
-                cy.add({
-                    data: {
-                        parent: "node-" + Workflows.fairy.current,
-                        id: "node-" + Workflows.fairy.current + "-" + i,
-                        name: field.name,
-                        color: params.color,
-                        font_color: params.font_color,
-                        type: field.type, // Text -> MultiText?
-                        required: field.required,
-                        multiple: field.multiple,
-                        forms: field.type == 'multiple' ? ["", ""] : [""] // FIXME: hack
-                    },
-                    position: { // TODO: use layouts here?
+                var pos;
+                if (position) {
+                    pos = {
                         x: position.x,
                         y: position.y + (i * 50)
                     }
+                } else {
+                    if (Workflows.selected) {
+                        if (Workflows.selected.descendants().length > 0) {
+                            pos = {
+                                x: parseInt(Workflows.selected.descendants()[0].position().x) + 200,
+                                y: i * 50
+                            }
+                        } else {
+                            pos = {
+                                x: parseInt(Workflows.selected.position().x) + 200,
+                                y: i * 50
+                            }
+                        }
+
+                    } else {
+                        pos = {
+                            x: 0,
+                            y: i * 50
+                        }
+                    }
+                }
+
+                cy.add({
+                    data: {
+                        parent: "node-" + Workflows.controller.counter,
+                        id: "node-" + Workflows.controller.counter + "-" + i,
+                        name: field.name,
+                        color: params.color,
+                        type: "field",
+                        font_color: params.font_color,
+                        datatype: field.type, // Text -> MultiText?
+                        required: field.required,
+                        info: field.info,
+                        multiple: field.multiple,
+                        forms: field.type === 'multiple' ? ["", ""] : [""], // FIXME: hack
+                        correct: []
+                    },
+                    position: pos
                 });
 
                 if (i > 0) { // add property like "connected"
                     cy.add({
                         group: "edges",
                         data: {
-                            source: "node-" + Workflows.fairy.current + "-" + (i-1),
-                            target: "node-" + Workflows.fairy.current + "-" + i
+                            source: "node-" + Workflows.controller.counter + "-" + (i-1),
+                            target: "node-" + Workflows.controller.counter + "-" + i
                         }
                     });
                 }
             });
 
+            // Workflows.history
+
+
             Workflows.cancelState();
             cy.$(':selected').unselect();
-            cy.$('#' + "node-" + Workflows.fairy.current).select();
+            cy.$('#' + "node-" + Workflows.controller.counter).select();
 
+            Workflows.history.modify("test");
+
+
+            Workflows.controller.counter += 1;
         }
-    },
-
-    wizard: {
-        current: 0,
-
-        populate: function(params) {
-
-            cy.add({
-                data: {
-                    id: "node-" + Workflows.wizard.current,
-                    name: params.name,
-                    color: params.color,
-                    font_color: params.font_color
-                }
-            });
-
-            if (Workflows.wizard.current > 0) { // add property like "connected"
-                cy.add({
-                    group: "edges",
-                    data: {
-                        source: "node-" + (Workflows.wizard.current-1),
-                        target: "node-" + Workflows.wizard.current
-                    }
-                });
-            }
-
-            _.each(params.fields, function (field, i) {
-                        cy.add({
-                            data: {
-                                parent: "node-" + Workflows.wizard.current,
-                                id: "node-" + Workflows.wizard.current + "-" + i,
-                                name: field.name,
-                                color: params.color,
-                                font_color: params.font_color,
-                                type: field.type, // Text -> MultiText?
-                                required: field.required,
-                                multiple: field.multiple,
-                                forms: field.type == 'multiple' ? ["", ""] : [""] // FIXME: hack
-                            },
-                            position: { // TODO: use layouts here?
-                                x: parseInt( Workflows.wizard.current * 200 ),
-                                y: parseInt( (i * 50) )
-                            }
-                        });
-
-                        if (i > 0) { // add property like "connected"
-                            cy.add({
-                                group: "edges",
-                                data: {
-                                    source: "node-" + Workflows.wizard.current + "-" + (i-1),
-                                    target: "node-" + Workflows.wizard.current + "-" + i
-                                }
-                            });
-                        }
-            });
-
-
-            $("#workflow-diagram-sidebar-next").unbind("click.next");
-            $("#workflow-diagram-sidebar-repeat").unbind("click.repeat");
-
-            $("#workflow-diagram-sidebar-next").bind("click.next", function() {
-                $("#workflow-diagram-sidebar-next").trigger("next-please");
-            });
-
-            $("#workflow-diagram-sidebar-repeat").bind("click.repeat", function() {
-                $("#workflow-diagram-sidebar-repeat").trigger("repeat-please");
-            });
-
-            cy.$(':selected').unselect();
-            cy.$('#' + "node-" + Workflows.wizard.current).select();
-
-            Workflows.fit();
-        }
-
     },
 
     sidebar: {
@@ -657,6 +834,15 @@ var Workflows = {
         }
     },
 
+    save: function() {
+        var blob = new Blob([ JSON.stringify( cy.json() ) ], { type: 'application/javascript;charset=utf-8' });
+        var saveAs = window.saveAs;
+        saveAs(blob, "workflow-" + new Date().toISOString().slice(0,19).replace("T", "_").replace(/\:/g, "-") + ".json");
+
+        // Workflows.formSubmitted = true;
+        $('#workflow-save-warning').hide();
+    },
+
     history: {
         initialize: function () {
             Workflows.history.index = 0;
@@ -676,6 +862,7 @@ var Workflows = {
             if (Workflows.history.index > 0) {
                 Workflows.history.index--;
                 Workflows.history.restore();
+                cy.$(':selected').unselect();
             }
         },
 
@@ -683,6 +870,7 @@ var Workflows = {
             if (Workflows.history.index < (Workflows.history.stack.length - 1)) {
                 Workflows.history.index++;
                 Workflows.history.restore();
+                cy.$(':selected').unselect();
             }
         },
 
@@ -931,7 +1119,6 @@ $(document).ready(function () {
                 }
             ],
             userZoomingEnabled: false,
-            autolock: !editable
         });
 
         if (editable) {
@@ -950,10 +1137,53 @@ $(document).ready(function () {
                 var wizard = config['ConfigOptions']['wizard'];
 
                 if (hideToolbar) {
-                    $('#workflow-toolbar > a.btn').hide();
+                    $('#workflow-toolbar-add').hide();
                 } else {
-                    $('#workflow-toolbar > a.btn').show();
+                    $('#workflow-toolbar-add').show();
                 }
+
+
+                $('#workflow-toolbar-undo').click(Workflows.history.undo);
+                $('#workflow-toolbar-redo').click(Workflows.history.redo);
+
+                $('#workflow-toolbar-save').click(function(){
+                   Workflows.save();
+                });
+
+                if (allowNodeReposition) {
+                    cy.autoungrabify(false);
+                } else {
+                    cy.autoungrabify(true);
+                }
+
+                $('#workflow-status-bar').find('.node-context-operation-button').remove();
+
+                $('#workflow-toolbar-back').click(function(){
+                    if (Workflows.selected.descendants().length > 0) {
+                        var selected = Workflows.selected;
+                    } else {
+                        var selected = Workflows.selected.parent();
+                    }
+                    if (selected.incomers().length > 0) {
+                        var incomer = selected.incomers()[1];
+                        Workflows.cancelState();
+                        cy.$('#' + incomer.data('id')).select();
+                    }
+                });
+
+                $('#workflow-toolbar-forward').click(function(){
+                    if (Workflows.selected.descendants().length > 0) {
+                        var selected = Workflows.selected;
+                    } else {
+                        var selected = Workflows.selected.parent();
+                    }
+                    if (selected.outgoers().length > 0) {
+                        var outgoer = selected.outgoers()[1];
+                        Workflows.cancelState();
+                        cy.$('#' + outgoer.data('id')).select();
+                    }
+                });
+                // $('#workflow-status-bar').find('.node-context-button').show();
 
                 // cy.$(':selected').unselect();
                 // cy.on('tap', Workflows.handleClick);
@@ -973,92 +1203,97 @@ $(document).ready(function () {
                 //     }
                 // });
 
+                cy.on('select', Workflows.sidebar2.populate);
+                var currentNode = 0;
+                var totalNodes = config['NodeTypes'].length;
+
+                var node = config['NodeTypes'][currentNode];
+                Workflows.controller.init(node);
+
+                Workflows.history.initialize();
+
+
+                // $("#workflow-status-bar").show();
+                // $("#workflow-toolbar-back").show();
+
+
+                function nextNodeType() {
+                    if (Workflows.selected) {
+
+                        if (Workflows.selected.descendants().length > 0) {
+                            var selected = Workflows.selected;
+                        } else {
+                            var selected = Workflows.selected.parent();
+                        }
+
+                            var currentNodeTypeName = selected.data('nodetype');
+                            for (var i = 0; i < config['NodeTypes'].length; i++) {
+                                var nodeTypeName = Object.keys(config['NodeTypes'][i])[0];
+                                if (nodeTypeName === currentNodeTypeName) {
+                                    return config['NodeTypes'][i + 1];
+                                }
+                            }
+
+                    } else {
+                        console.warn("TODO");
+                    }
+                }
+
+                function currentNodeType() {
+                    if (Workflows.selected) {
+
+                        if (Workflows.selected.descendants().length > 0) {
+                            var selected = Workflows.selected;
+                        } else {
+                            var selected = Workflows.selected.parent();
+                        }
+
+                        var currentNodeTypeName = selected.data('nodetype');
+                        for (var i = 0; i < config['NodeTypes'].length; i++) {
+                            var nodeTypeName = Object.keys(config['NodeTypes'][i])[0];
+                            if (nodeTypeName === currentNodeTypeName) {
+                                return config['NodeTypes'][i];
+                            }
+                        }
+
+                    } else {
+                        console.warn("TODO");
+                    }
+                }
+
 
                 if (wizard) {
-                    cy.on('select', Workflows.sidebar2.populate);
-
-                    var currentNode = 0;
-                    var totalNodes = config['NodeTypes'].length;
-
-                    function renderNode(n) {
-                        var nodeTypeWrap = config['NodeTypes'][n];
-                        var nodeTypeName = Object.keys(nodeTypeWrap)[0];
-                        var nodeType = nodeTypeWrap[nodeTypeName];
-
-                        var name = nodeType['NodeTypeName'];
-                        var colour = nodeType['Colour'] || "#bbbbbb"; // default
-                        var fontColour = nodeType['FontColour'] || "#00082b"; // default
-                        var promptPosition = nodeType['PromptPosition'];
-                        var required = nodeType['Required'];
-                        var multiple = nodeType['Multiple'];
-
-                        var fields = _.map(nodeType['Fields'], function(data, i) {
-                            var type;
-                            switch (data['DataType']) {
-                                case "Text":
-                                    type = "text";
-                                    break;
-                                case "MultipleChoice":
-                                    type = "multichoice";
-                                    break;
-                                case "OperationOntologyTerm":
-                                    type = "edam_operation";
-                                    break;
-                                case "InputTypeOntologyTerm":
-                                    type = "edam_input";
-                                    break;
-                                case "OutputTypeOntologyTerm":
-                                    type = "edam_output";
-                                    break;
-                                case "FormatTypeOntologyTerm":
-                                    type = "edam_format";
-                                    break;
-                                case "boolean":
-                                    type = "boolean";
-                                    break;
-
-                            }
-
-
-                            return {
-                                type: type,
-                                name: data['FieldName'],
-                                required: data['Required'],
-                                multiple: data['Multiple'],
-                                markdown: data['MarkdownFormatting']
-                            }
-                        });
-
-                        // render form
-                        Workflows.wizard.populate({
-                            name:  name,
-                            color: colour,
-                            font_color: fontColour,
-                            fields: fields,
-                            promptPosition: n,
-                            required: required,
-                            multiple: multiple
-                        });
-                    }
-                    renderNode(currentNode);
+                    Workflows.controller.populate();
 
                     $("#workflow-diagram-sidebar-next").bind("next-please", function(){
-                        Workflows.wizard.current += 1;
-                        if (currentNode < totalNodes - 1) {
-                            currentNode += 1;
-                            renderNode(currentNode);
-                        }
+                        node = nextNodeType() || currentNodeType();
+
+                        Workflows.controller.init(node);
+                        Workflows.controller.populate();
+
+                        Workflows.fit();
                     });
 
                     $("#workflow-diagram-sidebar-repeat").bind("repeat-please", function(){
-                        Workflows.wizard.current += 1;
-                        renderNode(currentNode);
+                        // Workflows.selected.data('');
+
+
+                        node = currentNodeType();
+                        Workflows.controller.init(node);
+                        Workflows.controller.populate();
+                        Workflows.fit();
                     });
+
+                    cy.$(':selected').unselect();
+                    cy.on('select', function (e) {
+                        Workflows.select2(e.target);
+                    });
+                    cy.on('unselect', Workflows.cancelState);
+                    cy.$('#node-' + currentNode).select();
+
+
+
                 } else {
-                    cy.on('select', Workflows.sidebar2.populate);
-
-                    Workflows.fairy.init(config);
-
                     $('#workflow-toolbar-add').click(Workflows.setAddNodeState);
                     $('#workflow-toolbar-cancel').click(Workflows.cancelState);
                     $('#workflow-toolbar-edit').click(Workflows.edit);
@@ -1086,99 +1321,12 @@ $(document).ready(function () {
                         }
                     });
 
-                    // cy.$(':selected').unselect();
-                    // cy.on('select', Workflows.sidebar.populate);
-                    //
-                    // Workflows.cancelState();
-                    // Workflows.history.initialize();
                 }
-
-
-                // $("#workflow-diagram-sidebar-previous").click(function(){
-                //     if (currentNode > 0) {
-                //         currentNode -= 1;
-                //         renderNode(currentNode);
-                //     }
-                // });
-
-
-
-
 
                 console.log(wfConfig);
 
             }
 
-            /*
-            switch (wfType) {
-                case "EducationalResource":
-                    Workflows.editor.init('EducationalResource');
-
-
-                    break;
-                default:
-                    // Bind events
-                    $('#workflow-toolbar-add').click(Workflows.setAddNodeState);
-                    $('#workflow-toolbar-cancel').click(Workflows.cancelState);
-                    $('#workflow-toolbar-edit').click(Workflows.edit);
-                    $('#workflow-toolbar-link').click(Workflows.setLinkNodeState);
-                    $('#workflow-toolbar-undo').click(Workflows.history.undo);
-                    $('#workflow-toolbar-redo').click(Workflows.history.redo);
-                    $('#workflow-toolbar-add-child').click(Workflows.addChild);
-                    $('#workflow-toolbar-delete').click(Workflows.delete);
-                    $('#node-modal-form-confirm').click(Workflows.nodeModalConfirm);
-                    $('#edge-modal-form-confirm').click(Workflows.edgeModalConfirm);
-                    $('.node-modal-add-resource-btn').click(Workflows.associatedResources.add);
-                    $('#node-modal')
-                        .on('hide.bs.modal', Workflows.cancelState)
-                        .on('click', '.delete-associated-resource', Workflows.associatedResources.delete)
-                        .on('click', '.delete-ontology-term', Workflows.ontologyTerms.delete);
-
-                    $('#edge-modal').on('hide.bs.modal', Workflows.cancelState);
-
-                    $('.workflow-diagram-wrapper .modal').keydown(function (event) {
-                        if(event.target.tagName != 'TEXTAREA') {
-                            if (event.keyCode == 13) {
-                                event.preventDefault();
-                                return false;
-                            }
-                        }
-                    });
-
-                    // Update JSON in form
-                    $('.workflow-form-submit').click(function () {
-                        $('#workflow_workflow_content').val(JSON.stringify(cy.json()['elements']));
-                        Workflows.formSubmitted = true;
-
-                        return true;
-                    });
-
-                    cy.on('tap', Workflows.handleClick);
-                    cy.on('select', function (e) {
-                        if (Workflows.state !== 'adding node') {
-                            Workflows.select(e.target);
-                        }
-                    });
-                    cy.on('unselect', Workflows.cancelState);
-                    cy.on('drag', function () {
-                        Workflows._dragged = true;
-                    });
-                    cy.on('free', function () {
-                        if (Workflows._dragged) {
-                            Workflows.history.modify('move node');
-                            Workflows._dragged = false;
-                        }
-                    });
-                    cy.$(':selected').unselect();
-                    cy.on('select', Workflows.sidebar.populate);
-
-                    // Initialize
-                    Workflows.cancelState();
-                    Workflows.history.initialize();
-                    jscolor.installByClassName('jscolor');
-                    break;
-            }
-            */
         } else {
             console.log('debug');
             // Hiding/revealing of child nodes

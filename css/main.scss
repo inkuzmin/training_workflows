@@ -893,3 +893,23 @@ input[type=checkbox].field-lock + label:before, .field-lock-example-open {
 .form-control {
   margin-bottom: 5px;
 }
+
+.highlighted {
+  padding-left: 3px;
+  border-left: 5px solid;
+}
+
+.form-info {
+  cursor: pointer;
+}
+
+.field {
+  label {
+    position: relative;
+    top: 5px;
+  }
+}
+
+.grip {
+  cursor: all-scroll;
+}
