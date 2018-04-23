@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-simplecolorpicker@0.3.1/jquery.simplecolorpicker.css">
+        <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">-->
 
         <!-- Custom styles -->
         <link rel="stylesheet" href="css/main.css">
@@ -279,8 +280,8 @@
                 </script>
             </div>
             <div id="workflow-diagram-sidebar">
-                <h3 class="nav-heading" id="workflow-diagram-sidebar-title">Test</h3>
-                <div id="workflow-diagram-sidebar-desc">Test</div>
+                <h3 class="nav-heading" id="workflow-diagram-sidebar-title"></h3>
+                <div id="workflow-diagram-sidebar-desc"></div>
                 <div class="modal-footer">
                     <!--<button id="workflow-diagram-sidebar-previous" type="button" class="btn btn-default">❮ Previous❯</button>-->
                     <!--<button id="workflow-diagram-sidebar-clear" type="button" class="btn btn-default">Clear</button>-->
@@ -378,54 +379,73 @@
 
 
     <script id="workflows/fields/MultipleChoice" type="text/x-handlebars-template">
-        <div class="form-group" data-field-type="text" id="{{ id }}">
+        <div class="field multiple-choice" data-field-type="text" id="{{ id }}">
 
-            <label>{{ name }}
-                {{#if required}}
-                <span class="muted">(required)</span>
+            {{#each data.choices as |choice key|}}
+            <div class="form-group">
+
+                <label>{{ ../name }}
+                    {{#if ../required}}
+                    <span class="muted">(required)</span>
+                    {{/if}}
+                </label>
+
+                {{#if ../info}}
+                <i class="form-info glyphicon glyphicon-info-sign"></i>
+                <div class="bg-info" style="display:none;">
+                    <p class="text-info">
+                        {{ ../info }}
+                    </p>
+                </div>
                 {{/if}}
-            </label>
 
-            {{#if info}}
-            <i class="form-info glyphicon glyphicon-info-sign"></i>
-            <div class="bg-info" style="display:none;">
-                <p class="text-info">
-                    {{ info }}
-                </p>
+                <input type="text" class="form-control question" value="{{choice.question}}">
+
+                <label>Answers</label>
+                <ul class="sort-answers">
+                {{#each choice.answers}}
+                    {{> answer}}
+                {{/each}}
+                </ul>
+
+
+                <button class="btn btn-default add-answer">
+                    Add new answer
+                </button>
+
+                <!--<hr>-->
+
             </div>
-            {{/if}}
 
-            {{#each answers}}
-                {{> answer}}
             {{/each}}
 
-
-            <button class="btn btn-default add-answer">
-                Add new answer
-            </button>
-
-
             {{#if multiple}}
-            <button class="btn btn-default add-question">
-                Add new question
-            </button>
-            <button class="btn btn-default remove-question">
-                Remove
-            </button>
+                <!--<button class="btn btn-default add-question">-->
+                    <!--Add new question-->
+                <!--</button>-->
+                <!--<button class="btn btn-default remove-question">-->
+                    <!--Remove-->
+                <!--</button>-->
             {{/if}}
+
+
 
         </div>
     </script>
 
     <script id="workflows/fields/MultipleChoiceAnswer" type="text/x-handlebars-template">
-        <div class="answer">
-            <label class="muted"><input class="check" type="checkbox" /> mark as correct</label>
-            <input type="text" class="form-control" placeholder="{{ name }}" value="{{this}}">
-        </div>
+        <li class="answer">
+            <label class="muted"><input class="correct" type="checkbox" {{#if this.correct}}checked="checked"{{/if}} /> mark as correct</label>
+            <div>
+                <span class="grip glyphicon glyphicon-option-vertical"></span>
+                <input type="text" class="form-control" value="{{this.answer}}">
+                <span class="remove glyphicon glyphicon-remove"></span>
+            </div>
+        </li>
     </script>
 
-    <script id="workflows/fields/Text1" type="text/x-handlebars-template">
-        <div class="form-group" data-field-type="text" id="{{ id }}">
+    <script id="workflows/fields/Text" type="text/x-handlebars-template">
+        <div class="field text" data-field-type="text" id="{{ id }}">
             <label for="node-modal-form-title">{{ name }}
                 {{#if required}}
                 <span class="muted">(required)</span>
@@ -442,17 +462,30 @@
             </div>
             {{/if}}
 
-            {{#each inputs}}
+            <ul class="sort-inputs">
+            {{#each data.inputs}}
                 {{> input}}
             {{/each}}
+            </ul>
+
+            {{#if multiple}}
+            <button class="btn btn-default add-input">
+                Add
+            </button>
+            {{/if}}
+        </div>
 
     </script>
     <script id="workflows/fields/TextInput" type="text/x-handlebars-template">
-
+        <li class="input">
+            <span class="grip glyphicon glyphicon-option-vertical"></span>
+            <input type="text" class="form-control" value="{{this}}">
+            <span class="remove glyphicon glyphicon-remove"></span>
+        </li>
     </script>
 
 
-    <script id="workflows/fields/text" type="text/x-handlebars-template">
+    <script id="workflows/fields/text1" type="text/x-handlebars-template">
         <div class="form-group" data-field-type="text" id="{{ id }}">
             <label for="node-modal-form-title">{{ name }}
                 {{#if required}}
@@ -470,10 +503,12 @@
             </div>
             {{/if}}
 
+            <ul class="sort-inputs">
             {{#each forms}}
             <input type="text" class="form-control" placeholder="{{ name }}" value="{{this}}">
             <i class="grip glyphicon glyphicon-option-vertical"></i>
             {{/each}}
+            </ul>
 
 
             {{#if multiple}}
@@ -566,6 +601,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-simplecolorpicker@0.3.1/jquery.simplecolorpicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.7/jquery.autocomplete.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/yamljs/0.3.0/yaml.js"></script>
 
@@ -577,7 +613,7 @@
 
             'workflows/editor_content': Handlebars.compile(document.getElementById("workflows/editor_content").innerHTML),
 
-            'workflows/fields/text': Handlebars.compile(document.getElementById("workflows/fields/text").innerHTML),
+            'workflows/fields/text1': Handlebars.compile(document.getElementById("workflows/fields/text1").innerHTML),
             'workflows/fields/multichoice': Handlebars.compile(document.getElementById("workflows/fields/multichoice").innerHTML),
 
             'workflows/fields/edam_operation': Handlebars.compile(document.getElementById("workflows/fields/edam_operation").innerHTML),
@@ -587,7 +623,7 @@
             'workflows/fields/boolean': Handlebars.compile(document.getElementById("workflows/fields/boolean").innerHTML),
 
             'workflows/fields/MultipleChoice': Handlebars.compile(document.getElementById('workflows/fields/MultipleChoice').innerHTML),
-            'workflows/fields/Text1': Handlebars.compile(document.getElementById('workflows/fields/Text1').innerHTML),
+            'workflows/fields/Text': Handlebars.compile(document.getElementById('workflows/fields/Text').innerHTML),
 
             // also partials
             'workflows/fields/MultipleChoiceAnswer': Handlebars.compile(document.getElementById('workflows/fields/MultipleChoiceAnswer').innerHTML),
@@ -595,13 +631,14 @@
 
         };
 
-        Handlebars.registerPartial("person", document.getElementById('workflows/fields/MultipleChoiceAnswer').innerHTML);
+        Handlebars.registerPartial("answer", document.getElementById('workflows/fields/MultipleChoiceAnswer').innerHTML);
 
         Handlebars.registerPartial("input", document.getElementById('workflows/fields/TextInput').innerHTML);
     </script>
 
     <!-- Custom js -->
     <script src="js/main.js"></script>
+    <script src="js/datatypes.js"></script>
 
     <!-- Init -->
     <script>

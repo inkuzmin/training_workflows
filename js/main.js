@@ -55,7 +55,6 @@ var Workflows = {
     },
 
     select2: function (target) {
-        console.log(111);
         if (target.isNode()) {
             Workflows.selected = target;
             $('#workflow-status-bar').find('.node-context-button').show();
@@ -260,6 +259,17 @@ var Workflows = {
             $("#workflow-diagram-sidebar-next").hide();
         },
 
+        setButtonState: function(target) {
+            if (target.isNode()) {
+                try {
+                    $("#workflow-diagram-sidebar-next").text("Add a " + Object.keys(Workflows.controller.nextNodeType())[0]);
+                    $("#workflow-diagram-sidebar-repeat").text("Repeat a " + Object.keys(Workflows.controller.currentNodeType())[0]);
+                } catch (err) {
+                    // TODO: something with params consistency and so on
+                }
+            }
+        },
+
         populate: function(e){
 
             if (e.target.isNode()) {
@@ -277,7 +287,11 @@ var Workflows = {
 
                 var $desk = $('#workflow-diagram-sidebar-desc').html("");
 
+                // node = Workflows.controller.nextNodeType() || Workflows.controller.currentNodeType();
+
                 $("#workflow-diagram-sidebar-next").show();
+
+                // $("#workflow-diagram-sidebar-next").text("Add a " + Object.keys(Workflows.controller.nextNodeType()));
 
                 if (target.data('multiple')) {
                     $("#workflow-diagram-sidebar-repeat").show();
@@ -291,20 +305,34 @@ var Workflows = {
                     (function(child) {
                         // params
                         var field = {
-                            type: child.data('datatype'),
+                            datatype: child.data('datatype'),
                             name: child.data('name'),
                             required: child.data('required'),
                             multiple: child.data('multiple'),
-                            forms: child.data('forms'),
+                            data: child.data('data'),
                             info: child.data('info'),
-                            id: child.data('id'),
-                            correct: child.data('correct')
+                            id: child.data('id')
                         };
 
                         // console.log(field);
+                        // console.log(field);
 
-                        var $fieldNode = $(HandlebarsTemplates['workflows/fields/' + field.type](field));
+                        // var $fieldNode = $(HandlebarsTemplates['workflows/fields/' + field.datatype](field));
 
+                        var $fieldNode;
+
+                        switch (field.datatype) {
+                            case "Text":
+                                $fieldNode = Workflows.DataTypeView.Text.render(field);
+                                break;
+                            case "MultipleChoice":
+                                $fieldNode = Workflows.DataTypeView.MultipleChoice.render(field);
+                                break;
+                        }
+
+
+                        $desk.append($fieldNode);
+                        /*
                         $fieldNode.find(".check").each(function(i, el) {
                             console.log(i);
                             if (field.correct.indexOf(i) !== -1) {
@@ -424,6 +452,7 @@ var Workflows = {
 
                         $desk.append($fieldNode);
 
+                        */
 
                         if (field.type === "edam_operation") {
                             $fieldNode.find('input').autocomplete({
@@ -542,7 +571,12 @@ var Workflows = {
 
     controller: {
         counter: 0, // FIXME
+        config: null,
         params: {}, // configuration of the current node type
+
+        getNodeName: function(node) {
+
+        },
 
         init: function(node) {
                 var nodeTypeName = Object.keys(node)[0];
@@ -556,35 +590,8 @@ var Workflows = {
                 var multiple = nodeType['Multiple'];
 
                 var fields = _.map(nodeType['Fields'], function(data, i) {
-                    var type;
-                    switch (data['DataType']) {
-                        case "Text":
-                            type = "text";
-                            break;
-                        case "MultipleChoice":
-                            type = "multichoice";
-                            break;
-                        case "OperationOntologyTerm":
-                            type = "edam_operation";
-                            break;
-                        case "InputTypeOntologyTerm":
-                            type = "edam_input";
-                            break;
-                        case "OutputTypeOntologyTerm":
-                            type = "edam_output";
-                            break;
-                        case "FormatTypeOntologyTerm":
-                            type = "edam_format";
-                            break;
-                        case "boolean":
-                            type = "boolean";
-                            break;
-
-                    }
-
-
                     return {
-                        type: type,
+                        datatype: data['DataType'],
                         name: data['FieldName'],
                         required: data['Required'],
                         multiple: data['Multiple'],
@@ -664,16 +671,6 @@ var Workflows = {
 
                         successors.shift('x', 200);
 
-                        // for (var i = 0; i < successors.length; i++) {
-                        //     if (successors[i].isNode()) {
-                        //         var children = successors[i].descendants();
-                        //         for (var j = 0; j < children.length; j++) {
-                        //             children[j].position.x = children[j].position().x + 200
-                        //         }
-                        //     }
-                        // }
-
-
                     } else {
                         cy.add({
                             group: "edges",
@@ -724,12 +721,11 @@ var Workflows = {
                         color: params.color,
                         type: "field",
                         font_color: params.font_color,
-                        datatype: field.type, // Text -> MultiText?
+                        datatype: field.datatype, // Text -> MultiText?
                         required: field.required,
                         info: field.info,
                         multiple: field.multiple,
-                        forms: field.type === 'multiple' ? ["", ""] : [""], // FIXME: hack
-                        correct: []
+                        data: Workflows.DataType[field.datatype].init()
                     },
                     position: pos
                 });
@@ -752,85 +748,57 @@ var Workflows = {
             cy.$(':selected').unselect();
             cy.$('#' + "node-" + Workflows.controller.counter).select();
 
-            Workflows.history.modify("test");
+            Workflows.history.modify("test"); // TODO: message
 
 
             Workflows.controller.counter += 1;
-        }
-    },
-
-    sidebar: {
-        init: function () {
-            var sidebar = $('#workflow-diagram-sidebar');
-            sidebar.data('initialState', sidebar.html());
-            sidebar.html('');
         },
 
-        populate: function (e) {
-            if (e.target.isNode()) {
-                // Hide all expanded nodes and edges not related to this one
-                var relatives = e.target.ancestors().descendants();
-                var unrelated = cy.$('.visible').difference(relatives);
-                unrelated.removeClass('visible');
-                unrelated.connectedEdges().addClass('hidden');
+        nextNodeType: function () {
+            var config = Workflows.controller.config;
+            if (Workflows.selected) {
 
-                // Show parents if they are hidden
-                relatives.addClass('visible').connectedEdges().removeClass('hidden');
-
-                // Show child nodes and their edges
-                if (e.target.isParent()) {
-                    e.target.children().addClass('visible').connectedEdges().removeClass('hidden');
+                if (Workflows.selected.descendants().length > 0) {
+                    var selected = Workflows.selected;
+                } else {
+                    var selected = Workflows.selected.parent();
                 }
 
-                if (!e.target.data('html_description') && e.target.data('description')) {
-                    e.target.data('html_description', MarkdownIt.render(e.target.data('description')));
-                }
+                var currentNodeTypeName = selected.data('nodetype');
 
-                var resources = e.target.data('associatedResources');
-                if (resources && resources.length > 0){
-                    for(var i = 0; i < resources.length; i++) {
-                        var resource = resources[i];
-                        var uri = URI.parse(resource.url);
-                        if (uri.hostname == 'bio.tools') {
-                            var id = uri.path.split('/')[2];
-                            Biotools.displayToolInfo(id);
-                            resource.id =id
-                        }
+                for (var i = 0; i < config['NodeTypes'].length; i++) {
+                    var nodeTypeName = Object.keys(config['NodeTypes'][i])[0];
+                    if (nodeTypeName === currentNodeTypeName) {
+                        return config['NodeTypes'][i + 1];
                     }
                 }
-                e.target.data('associatedResources', resources);
 
-                $('#workflow-diagram-sidebar-title').html(e.target.data('name') || '<span class="muted">Untitled</span>')
-                    .css('background-color', e.target.data('color'))
-                    .css('color', e.target.data('font_color'));
-                $('#workflow-diagram-sidebar-desc').html(HandlebarsTemplates['workflows/sidebar_content'](e.target.data()));
-
-                Workflows.storeLastSelection();
-
-                var zoom = 1.8;
-                // Fit the view to the selected thing if it will be too big to fit in the viewport when zoomed
-                if ((e.target.width() * zoom) > (cy.width() * 0.9)) {
-                    cy.animate({ fit: { eles: e.target.children().union(e.target), padding: 40 }, duration: 300 })
-                } else { // Or just zoom in on it
-                    cy.animate({ center: { eles: e.target }, zoom: zoom, duration: 300 })
-                }
-
-            } else if (e.target.isEdge()) {
-                var title = $('#workflow-diagram-sidebar-title');
-                if (e.target.data('name')) {
-                    title.html(e.target.data('name') + ' (edge)');
-                } else {
-                    title.html('<span class="muted">Untitled (edge)</span>');
-                }
-
-                title.css('background-color', '')
-                    .css('color', '');
+            } else {
+                console.warn("TODO");
             }
         },
 
-        clear: function () {
-            var sidebar = $('#workflow-diagram-sidebar');
-            sidebar.html(sidebar.data('initialState'));
+        currentNodeType: function() {
+            var config = Workflows.controller.config;
+            if (Workflows.selected) {
+
+                if (Workflows.selected.descendants().length > 0) {
+                    var selected = Workflows.selected;
+                } else {
+                    var selected = Workflows.selected.parent();
+                }
+
+                var currentNodeTypeName = selected.data('nodetype');
+                for (var i = 0; i < config['NodeTypes'].length; i++) {
+                    var nodeTypeName = Object.keys(config['NodeTypes'][i])[0];
+                    if (nodeTypeName === currentNodeTypeName) {
+                        return config['NodeTypes'][i];
+                    }
+                }
+
+            } else {
+                console.warn("TODO");
+            }
         }
     },
 
@@ -910,110 +878,6 @@ var Workflows = {
         }
     },
 
-    associatedResources: {
-        types: {
-            materials: { icon: 'fa-book' },
-            events: {icon: 'fa-calendar'},
-            tools: { icon: 'fa-wrench' },
-            policies: { icon: 'fa-file-text-o' }
-        },
-
-        // Add a new blank form for an associated resource
-        add: function () {
-            var type = $(this).data('resourceType');
-            var template = HandlebarsTemplates['workflows/associated_resource_form'];
-
-            $('#node-modal-associated-resource-list').append(template({
-                type: type,
-                icon: Workflows.associatedResources.types[type].icon
-            }));
-
-            return false;
-        },
-
-        delete: function () {
-            $(this).parents('.associated-resource').remove();
-            return false;
-        },
-
-        // Fetch the associated resources from the modal. Returns an array of objects that can be added to a node's data
-        fetch: function (node) {
-            var resources = [];
-            $('#node-modal-associated-resource-list .associated-resource').each(function () {
-                // "data-attribute" is just something I made up so I could identify the two form fields.
-                // If I used the standard "name", they would end up getting posted to the server when the main workflow form is submitted.
-                var resource = {
-                    title: $('[data-attribute=title]', $(this)).val(),
-                    url: $('[data-attribute=url]', $(this)).val(),
-                    type: $('[data-attribute=type]', $(this)).val()
-                };
-
-                // Detect if URL is internal, and make it relative
-                var base = window.location.toString().split('/workflows')[0];
-                if (resource.url.indexOf(base) !== -1) {
-                    resource.url = resource.url.substr(base.length)
-                }
-
-                if (resource.url && resource.title) {
-                    resources.push(resource);
-                }
-            });
-
-            return resources;
-        },
-
-        // Populate the modal with existing associated resource forms that can be edited by the user
-        populate: function (resources) {
-            var resourceList = $('#node-modal-associated-resource-list');
-            resourceList.html('');
-
-            for(var i = 0; i < resources.length; i++) {
-                var resource = resources[i];
-                resource.icon = Workflows.associatedResources.types[resource.type].icon;
-                resourceList.append(
-                    HandlebarsTemplates['workflows/associated_resource_form'](resource)
-                );
-            }
-        }
-    },
-
-    ontologyTerms: {
-        add: function (suggestion) {
-            var template = HandlebarsTemplates['workflows/ontology_term_form'];
-
-            $('#node-modal-ontology-terms-list').append(template({
-                label: suggestion.data['Preferred Label'],
-                uri: suggestion.data['Class ID']
-            }));
-
-            return false;
-        },
-
-        delete: function () {
-            console.log(111);
-            $(this).parents('.ontology-term').remove();
-            return false;
-        },
-
-        fetch: function (node) {
-            return $('#node-modal-ontology-terms-list .ontology-term').map(function () {
-                return { label: $(this).data('attributeLabel'),
-                    uri: $(this).data('attributeUrl')
-                };
-            }).toArray();
-        },
-
-        populate: function (resources) {
-            var resourceList = $('#node-modal-ontology-terms-list');
-            resourceList.html('');
-
-            for(var i = 0; i < resources.length; i++) {
-                resourceList.append(
-                    HandlebarsTemplates['workflows/ontology_term_form'](resources[i])
-                );
-            }
-        }
-    },
 
     fit: function() {
         // cy.panzoom();
@@ -1123,8 +987,16 @@ $(document).ready(function () {
 
         if (editable) {
 
+
+
+
             // check if wf type is known (i.e. there is such field in the WorkflowConfig.yml)
             if (wfConfig.hasOwnProperty(wfType)) {
+
+                wfType = getParameterByName('type'); // || wfType; // FIXME: DEBUG
+
+                console.log(wfType);
+
                 var config = wfConfig[wfType];
 
                 // Show somewhere typename
@@ -1204,10 +1076,12 @@ $(document).ready(function () {
                 // });
 
                 cy.on('select', Workflows.sidebar2.populate);
-                var currentNode = 0;
+
+                Workflows.controller.config = config;
+
                 var totalNodes = config['NodeTypes'].length;
 
-                var node = config['NodeTypes'][currentNode];
+                var node = config['NodeTypes'][0];
                 Workflows.controller.init(node);
 
                 Workflows.history.initialize();
@@ -1217,56 +1091,11 @@ $(document).ready(function () {
                 // $("#workflow-toolbar-back").show();
 
 
-                function nextNodeType() {
-                    if (Workflows.selected) {
-
-                        if (Workflows.selected.descendants().length > 0) {
-                            var selected = Workflows.selected;
-                        } else {
-                            var selected = Workflows.selected.parent();
-                        }
-
-                            var currentNodeTypeName = selected.data('nodetype');
-                            for (var i = 0; i < config['NodeTypes'].length; i++) {
-                                var nodeTypeName = Object.keys(config['NodeTypes'][i])[0];
-                                if (nodeTypeName === currentNodeTypeName) {
-                                    return config['NodeTypes'][i + 1];
-                                }
-                            }
-
-                    } else {
-                        console.warn("TODO");
-                    }
-                }
-
-                function currentNodeType() {
-                    if (Workflows.selected) {
-
-                        if (Workflows.selected.descendants().length > 0) {
-                            var selected = Workflows.selected;
-                        } else {
-                            var selected = Workflows.selected.parent();
-                        }
-
-                        var currentNodeTypeName = selected.data('nodetype');
-                        for (var i = 0; i < config['NodeTypes'].length; i++) {
-                            var nodeTypeName = Object.keys(config['NodeTypes'][i])[0];
-                            if (nodeTypeName === currentNodeTypeName) {
-                                return config['NodeTypes'][i];
-                            }
-                        }
-
-                    } else {
-                        console.warn("TODO");
-                    }
-                }
-
-
                 if (wizard) {
                     Workflows.controller.populate();
 
                     $("#workflow-diagram-sidebar-next").bind("next-please", function(){
-                        node = nextNodeType() || currentNodeType();
+                        node = Workflows.controller.nextNodeType() || Workflows.controller.currentNodeType();
 
                         Workflows.controller.init(node);
                         Workflows.controller.populate();
@@ -1277,8 +1106,7 @@ $(document).ready(function () {
                     $("#workflow-diagram-sidebar-repeat").bind("repeat-please", function(){
                         // Workflows.selected.data('');
 
-
-                        node = currentNodeType();
+                        node = Workflows.controller.currentNodeType();
                         Workflows.controller.init(node);
                         Workflows.controller.populate();
                         Workflows.fit();
@@ -1287,9 +1115,10 @@ $(document).ready(function () {
                     cy.$(':selected').unselect();
                     cy.on('select', function (e) {
                         Workflows.select2(e.target);
+                        Workflows.sidebar2.setButtonState(e.target);
                     });
                     cy.on('unselect', Workflows.cancelState);
-                    cy.$('#node-' + currentNode).select();
+                    cy.$('#node-0').select();
 
 
 
@@ -1372,3 +1201,12 @@ $(document).ready(function () {
 });
 
 
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
