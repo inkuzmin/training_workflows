@@ -294,6 +294,15 @@
     </div>
 
     <!-- HandlebarTemplates -->
+
+    <script id="workflows/edam-input" type="text/x-handlebars-template">
+        <div class="form-group">
+            <input type="text" class="form-control" autocomplete="off" placeholder="Type to search for a term..." />
+            <ul class="terms">
+            </ul>
+        </div>
+    </script>
+
     <script id="workflows/associated_resource_form" type="text/x-handlebars-template">
         <div class="form-inline associated-resource">
             <span class="icon"><i class="fa {{icon}}"></i></span>
@@ -605,6 +614,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/yamljs/0.3.0/yaml.js"></script>
 
+    <script src="js/edam.js"></script>
+
     <script>
         var HandlebarsTemplates = {
             'workflows/associated_resource_form': Handlebars.compile(document.getElementById('workflows/associated_resource_form').innerHTML),
@@ -627,8 +638,11 @@
 
             // also partials
             'workflows/fields/MultipleChoiceAnswer': Handlebars.compile(document.getElementById('workflows/fields/MultipleChoiceAnswer').innerHTML),
-            'workflows/fields/TextInput': Handlebars.compile(document.getElementById('workflows/fields/TextInput').innerHTML)
+            'workflows/fields/TextInput': Handlebars.compile(document.getElementById('workflows/fields/TextInput').innerHTML),
 
+
+            // concept maps
+            'workflows/edam-input': Handlebars.compile(document.getElementById('workflows/edam-input').innerHTML)
         };
 
         Handlebars.registerPartial("answer", document.getElementById('workflows/fields/MultipleChoiceAnswer').innerHTML);

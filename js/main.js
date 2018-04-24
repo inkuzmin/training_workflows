@@ -1120,9 +1120,20 @@ $(document).ready(function () {
                     cy.on('unselect', Workflows.cancelState);
                     cy.$('#node-0').select();
 
-
-
                 } else {
+
+                    var tmpl = HandlebarsTemplates['workflows/edam-input'];
+                    var $edam = $(tmpl());
+
+                    $("#workflow-diagram-sidebar-desc").append($edam);
+
+                    $edam.edam({
+                        level: 1,
+                        types: ["Operation"]
+                        // types: ["Topic", "Operation"]
+                    });
+
+
                     $('#workflow-toolbar-add').click(Workflows.setAddNodeState);
                     $('#workflow-toolbar-cancel').click(Workflows.cancelState);
                     $('#workflow-toolbar-edit').click(Workflows.edit);
