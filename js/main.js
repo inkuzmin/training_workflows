@@ -1128,7 +1128,7 @@ $(document).ready(function () {
                     $("#workflow-diagram-sidebar-desc").append($edam);
 
                     $edam.edam({
-                        level: 1,
+                        level: 100,
                         types: ["Operation"]
                         // types: ["Topic", "Operation"]
                     });
