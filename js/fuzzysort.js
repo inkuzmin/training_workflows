@@ -1,3 +1,4 @@
+// SublimeText-like Fuzzy Search
 // Author: farzher
 // Repository: https://github.com/farzher/fuzzysort
 // License: MIT

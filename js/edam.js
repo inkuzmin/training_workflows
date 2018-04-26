@@ -14,6 +14,8 @@
     $.fn.edam = function( options ) {
 
         var $el = this;
+        var $input = $el.find("input");
+        var $termsWrap = $el.find("ul.terms");
 
         // get params, here are the defaults
         var settings = $.extend({
@@ -21,7 +23,18 @@
             level: 0
         }, options );
 
+        $input.on('keyup', function(e) {
 
+            $termsWrap.html();
+
+            var root_id = Object.keys($.fn.edamData)[0];
+            var root_data = $.fn.edamData[root_id];
+
+            var $terms = renderTerm(root_id, root_data, 0, $input.val());
+
+            $termsWrap.append($terms);
+
+        });
 
 
         var root_id = Object.keys($.fn.edamData)[0];
@@ -54,6 +67,10 @@
                         }
                     } else {
                         // types are not defined (all types)
+                    }
+
+                    if ($input.) {
+
                     }
 
                     $li.text(label);
