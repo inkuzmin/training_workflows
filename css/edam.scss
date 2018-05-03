@@ -5,6 +5,11 @@
     font-weight: normal !important;
   }
 
+  label:hover {
+    color: cornflowerblue;
+  }
+
+
   ul, li {
     margin: 0;
     padding: 0;
@@ -16,17 +21,67 @@
 
   .term {
     display: none;
+    position: relative;
+  }
+
+  i.form-info {
+    position: relative;
+    top: -3px;
+    left: 3px;
+  }
+
+  .disclosure {
+    cursor: pointer;
+    position: absolute;
+    top: 2px;
+    left: -15px;
+  }
+
+  .disclosed {
+    .disclosure {
+      position: absolute;
+      //top: 2px;
+      //left: -15px;
+      //transform: rotate(-90deg);
+    }
+  }
+
+
+
+
+  .info {
+    display: none;
+    background-color: #d9edf7;
+    padding: 5px 10px 0.1px 10px;
+    border-radius: 5px;
+    position: relative;
+    top: -5px;
+
+    p {
+      margin-bottom: 5px;
+    }
   }
 
   .term.shown {
     display: block;
   }
 
-  .synonym {
-    label::after {
-      content: ' (by synonym)';
+  .synonym > label::after {
+      content: ' (by synonym)';
       display: inline-block;
-    }
+      font-weight: 300;
+      color: #999;
+  }
+
+  .clear {
+    display: inline-block;
+    position: absolute;
+    right: 12px;
+    top: 8px;
+    //width: 12px;
+    //height: 12px;
+    display: none;
+    cursor: pointer;
   }
 
   .spinner {

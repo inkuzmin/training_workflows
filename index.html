@@ -294,14 +294,34 @@
     </div>
 
     <!-- HandlebarTemplates -->
+    <script id="workflows/EdamInput" type="text/x-handlebars-template">
+        <div class="form-group" id="{{ id }}">
+            <label>{{ name }}</label>
 
-    <script id="workflows/edam-input" type="text/x-handlebars-template">
-        <div class="form-group edam">
-            <input type="text" class="form-control" autocomplete="off" placeholder="Type to search for a term..." />
-            <div class="spinner"></div>
-            <ul class="terms">
-            </ul>
+            {{#if required}}
+            {{> edam }}
+            {{/if}}
+
+            {{#if multiple}}
+            <button class="btn btn-default add-question">
+                Add
+            </button>
+            <button class="btn btn-default remove-question">
+                Remove
+            </button>
+            {{/if}}
         </div>
+    </script>
+
+    <script id="workflows/edam" type="text/x-handlebars-template">
+            <div class="edam">
+                <input type="text" class="form-control" autocomplete="off" placeholder="Type to search for a term..." />
+                <div class="spinner"></div>
+                <div class="clear">✖</div>
+                <ul class="terms">
+                </ul>
+                <div class="info"></div>
+            </div>
     </script>
 
     <script id="workflows/associated_resource_form" type="text/x-handlebars-template">
@@ -644,12 +664,15 @@
 
 
             // concept maps
-            'workflows/edam-input': Handlebars.compile(document.getElementById('workflows/edam-input').innerHTML)
+            'workflows/EdamInput': Handlebars.compile(document.getElementById('workflows/EdamInput').innerHTML),
+            'workflows/edam': Handlebars.compile(document.getElementById('workflows/edam').innerHTML)
         };
 
         Handlebars.registerPartial("answer", document.getElementById('workflows/fields/MultipleChoiceAnswer').innerHTML);
 
         Handlebars.registerPartial("input", document.getElementById('workflows/fields/TextInput').innerHTML);
+
+        Handlebars.registerPartial("edam", document.getElementById('workflows/edam').innerHTML);
     </script>
 
     <!-- Custom js -->
@@ -679,6 +702,18 @@
 
 
     <script>
+
+        // $.fn.edamData = null;
+        //
+        // $.ajax({
+        //     dataType: "json",
+        //     url: "edam.json",
+        //     async: false,
+        //     success: function(data) {
+        //         $.fn.edamData = data;
+        //     }
+        // });
+
         $(document).on('click', '.delete-list-item', function () {
             $(this).parents('li').remove();
             return false;

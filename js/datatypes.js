@@ -24,12 +24,130 @@ Workflows.DataType = {
             }
         }
     },
-    Boolean: {
 
+    // EDAM
+
+    OperationOntologyTerm: {
+        init: function () {
+            return {
+                terms: []
+            }
+        }
+    },
+    InputTypeOntologyTerm: {
+        init: function () {
+            return {
+                terms: []
+            }
+        }
+    },
+    OutputTypeOntologyTerm: {
+        init: function () {
+            return {
+                terms: []
+            }
+        }
+    },
+    FormatTypeOntologyTerm: {
+        init: function () {
+            return {
+                terms: []
+            }
+        }
+    },
+    RequiredConditions: {
+        init: function () {
+            return {
+                terms: []
+            }
+        }
     }
 };
 
 Workflows.DataTypeView = {
+    OperationOntologyTerm: {
+        render: function (data) {
+            var tmpl = HandlebarsTemplates['workflows/EdamInput'];
+            var $edam = $(tmpl(data));
+
+            $edam.edam({
+                types: ["Operation"],
+                disclosed: 1,
+                selected: data.data.terms.length > 0 && data.data.terms[0]
+            });
+
+            $edam.on('edams:select', function(e, value){
+                data.data.terms.push(value);
+                if (value.color) {
+                    cy.$(':selected').data.color = value.color;
+                    cy.$(':selected').style({'background-color': value.color, 'background-opacity': 0.8});
+
+                    cy.$(':selected').descendants().style({'background-color': value.color, 'background-opacity': 0.8});
+                }
+            });
+
+            $edam.on('edams:unselect', function(e, value){
+                data.data.terms.pop(value);
+
+                cy.$(':selected').data.color = 'undefined';
+                cy.$(':selected').style({'background-color': "lightgrey", 'background-opacity': 0.8});
+
+                cy.$(':selected').descendants().style({'background-color': "lightgrey", 'background-opacity': 0.8});
+
+
+            });
+
+            return $edam;
+
+        }
+    },
+    InputTypeOntologyTerm: {
+        render: function (data) {
+            var tmpl = HandlebarsTemplates['workflows/EdamInput'];
+            var $edam = $(tmpl(data));
+
+            $edam.edam({
+                types: ["Data"],
+                disclosed: 1,
+                selected: {label: '123'}
+            });
+
+            return $edam;
+
+        }
+    },
+    OutputTypeOntologyTerm: {
+        render: function (data) {
+            var tmpl = HandlebarsTemplates['workflows/EdamInput'];
+            var $edam = $(tmpl(data));
+
+            $edam.edam({
+                types: ["Data"],
+                disclosed: 1,
+                selected: {label: '123'}
+            });
+
+            return $edam;
+
+        }
+    },
+    FormatTypeOntologyTerm: {
+        render: function (data) {
+            var tmpl = HandlebarsTemplates['workflows/EdamInput'];
+            var $edam = $(tmpl(data));
+
+            $edam.edam({
+                types: ["Format"],
+                disclosed: 1,
+                selected: {label: '123'}
+            });
+
+            return $edam;
+
+        }
+    },
+
+
     Text: {
         render: function (data) { // data = Workflows.DataType.Text
             var tmpl = HandlebarsTemplates['workflows/fields/' + data.datatype];

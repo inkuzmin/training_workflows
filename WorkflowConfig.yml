@@ -129,17 +129,17 @@ ConceptMap:
             Multiple: true
             DataType: FormatTypeOntologyTerm
             MarkdownFormatting: false
-          - Required:
+          - RequiredConditions:
             FieldName: Required Step
             InfoText: Is this a necessary step of the workflow or can it be skipped.
             Required: true
             Multiple: false
-            DataType: Boolean
+            DataType: RequiredConditions
             MarkdownFormatting: false
-          - RequiredConditions:
-            FieldName: Required Conditions
-            InfoText: The conditions on which this step can be skipped if required step is set to false
-            Required: false
-            Multiple: false
-            DataType: Text
-            MarkdownFormatting: true
+#          - RequiredConditions:
+#            FieldName: Required Conditions
+#            InfoText: The conditions on which this step can be skipped if required step is set to false
+#            Required: false
+#            Multiple: false
+#            DataType: Text
+#            MarkdownFormatting: true

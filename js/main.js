@@ -271,9 +271,7 @@ var Workflows = {
         },
 
         populate: function(e){
-
             if (e.target.isNode()) {
-
                 var target;
                 if (e.target.data('type') === "node") {
                     target = e.target;
@@ -327,6 +325,21 @@ var Workflows = {
                                 break;
                             case "MultipleChoice":
                                 $fieldNode = Workflows.DataTypeView.MultipleChoice.render(field);
+                                break;
+                            case "OperationOntologyTerm":
+                                $fieldNode = Workflows.DataTypeView.OperationOntologyTerm.render(field);
+                                break;
+
+                            case "InputTypeOntologyTerm":
+                                $fieldNode = Workflows.DataTypeView.InputTypeOntologyTerm.render(field);
+                                break;
+
+                            case "OutputTypeOntologyTerm":
+                                $fieldNode = Workflows.DataTypeView.OutputTypeOntologyTerm.render(field);
+                                break;
+
+                            case "FormatTypeOntologyTerm":
+                                $fieldNode = Workflows.DataTypeView.OutputTypeOntologyTerm.render(field);
                                 break;
                         }
 
@@ -454,89 +467,89 @@ var Workflows = {
 
                         */
 
-                        if (field.type === "edam_operation") {
-                            $fieldNode.find('input').autocomplete({
-                                serviceUrl: 'http://193.40.11.103/edam/operations', // https://tess.elixir-europe.org/edam/operations
-                                dataType: 'json',
-                                deferRequestBy: 150,
-                                paramName: 'filter',
-                                transformResult: function (response) {
-                                    // console.log(response);
-                                    return {
-                                        suggestions: $.map(response, function (item) {
-                                            return {value: item['Preferred Label'], data: item};
-                                        })
-                                    };
-                                },
-                                onSelect: function (suggestion) {
-                                    $(this).val('');
-                                    $fieldNode.find('input').val(suggestion.value);
-                                    Workflows.ontologyTerms.add(suggestion);
-                                },
-                                onSearchStart: function () {
-                                    $(this).addClass('loading');
-                                },
-                                onSearchComplete: function () {
-                                    $(this).removeClass('loading');
-                                }
-                            });
-                        }
+                        // if (field.type === "edam_operation") {
+                        //     $fieldNode.find('input').autocomplete({
+                        //         serviceUrl: 'http://193.40.11.103/edam/operations', // https://tess.elixir-europe.org/edam/operations
+                        //         dataType: 'json',
+                        //         deferRequestBy: 150,
+                        //         paramName: 'filter',
+                        //         transformResult: function (response) {
+                        //             // console.log(response);
+                        //             return {
+                        //                 suggestions: $.map(response, function (item) {
+                        //                     return {value: item['Preferred Label'], data: item};
+                        //                 })
+                        //             };
+                        //         },
+                        //         onSelect: function (suggestion) {
+                        //             $(this).val('');
+                        //             $fieldNode.find('input').val(suggestion.value);
+                        //             Workflows.ontologyTerms.add(suggestion);
+                        //         },
+                        //         onSearchStart: function () {
+                        //             $(this).addClass('loading');
+                        //         },
+                        //         onSearchComplete: function () {
+                        //             $(this).removeClass('loading');
+                        //         }
+                        //     });
+                        // }
 
-                        if (field.type === "edam_input" || field.type === "edam_output") {
-                            $fieldNode.find('input').autocomplete({
-                                serviceUrl: 'http://193.40.11.103/edam/data', // https://tess.elixir-europe.org/edam/operations
-                                dataType: 'json',
-                                deferRequestBy: 150,
-                                paramName: 'filter',
-                                transformResult: function (response) {
-                                    // console.log(response);
-                                    return {
-                                        suggestions: $.map(response, function (item) {
-                                            return {value: item['Preferred Label'], data: item};
-                                        })
-                                    };
-                                },
-                                onSelect: function (suggestion) {
-                                    $(this).val('');
-                                    $fieldNode.find('input').val(suggestion.value);
-                                    Workflows.ontologyTerms.add(suggestion);
-                                },
-                                onSearchStart: function () {
-                                    $(this).addClass('loading');
-                                },
-                                onSearchComplete: function () {
-                                    $(this).removeClass('loading');
-                                }
-                            });
-                        }
+                        // if (field.type === "edam_input" || field.type === "edam_output") {
+                        //     $fieldNode.find('input').autocomplete({
+                        //         serviceUrl: 'http://193.40.11.103/edam/data', // https://tess.elixir-europe.org/edam/operations
+                        //         dataType: 'json',
+                        //         deferRequestBy: 150,
+                        //         paramName: 'filter',
+                        //         transformResult: function (response) {
+                        //             // console.log(response);
+                        //             return {
+                        //                 suggestions: $.map(response, function (item) {
+                        //                     return {value: item['Preferred Label'], data: item};
+                        //                 })
+                        //             };
+                        //         },
+                        //         onSelect: function (suggestion) {
+                        //             $(this).val('');
+                        //             $fieldNode.find('input').val(suggestion.value);
+                        //             Workflows.ontologyTerms.add(suggestion);
+                        //         },
+                        //         onSearchStart: function () {
+                        //             $(this).addClass('loading');
+                        //         },
+                        //         onSearchComplete: function () {
+                        //             $(this).removeClass('loading');
+                        //         }
+                        //     });
+                        // }
 
-                        if (field.type === "edam_format") {
-                            $fieldNode.find('input').autocomplete({
-                                serviceUrl: 'http://193.40.11.103/edam/formats', // https://tess.elixir-europe.org/edam/operations
-                                dataType: 'json',
-                                deferRequestBy: 150,
-                                paramName: 'filter',
-                                transformResult: function (response) {
-                                    // console.log(response);
-                                    return {
-                                        suggestions: $.map(response, function (item) {
-                                            return {value: item['Preferred Label'], data: item};
-                                        })
-                                    };
-                                },
-                                onSelect: function (suggestion) {
-                                    $(this).val('');
-                                    $fieldNode.find('input').val(suggestion.value);
-                                    Workflows.ontologyTerms.add(suggestion);
-                                },
-                                onSearchStart: function () {
-                                    $(this).addClass('loading');
-                                },
-                                onSearchComplete: function () {
-                                    $(this).removeClass('loading');
-                                }
-                            });
-                        }
+                        // if (field.type === "edam_format") {
+                        //     $fieldNode.find('input').autocomplete({
+                        //         serviceUrl: 'http://193.40.11.103/edam/formats', // https://tess.elixir-europe.org/edam/operations
+                        //         dataType: 'json',
+                        //         deferRequestBy: 150,
+                        //         paramName: 'filter',
+                        //         transformResult: function (response) {
+                        //             // console.log(response);
+                        //             return {
+                        //                 suggestions: $.map(response, function (item) {
+                        //                     return {value: item['Preferred Label'], data: item};
+                        //                 })
+                        //             };
+                        //         },
+                        //         onSelect: function (suggestion) {
+                        //             $(this).val('');
+                        //             $fieldNode.find('input').val(suggestion.value);
+                        //             Workflows.ontologyTerms.add(suggestion);
+                        //         },
+                        //         onSearchStart: function () {
+                        //             $(this).addClass('loading');
+                        //         },
+                        //         onSearchComplete: function () {
+                        //             $(this).removeClass('loading');
+                        //         }
+                        //     });
+                        // }
 
                     })(children[i]);
                 }
@@ -635,7 +648,12 @@ var Workflows = {
 
             if (position) {
 
-            } else { // if there is no position we are in sequential mode
+                console.log("trying to render node");
+
+            } else {
+
+
+                // if there is no position we are in sequential mode
                 // 1. check if there are successors
 
                 if (Workflows.selected) {
@@ -682,6 +700,15 @@ var Workflows = {
                     }
 
                 }
+
+
+
+
+
+
+
+
+
             }
 
             _.each(params.fields, function (field, i) {
@@ -712,6 +739,8 @@ var Workflows = {
                         }
                     }
                 }
+
+                console.log(field.datatype);
 
                 cy.add({
                     data: {
@@ -987,9 +1016,6 @@ $(document).ready(function () {
 
         if (editable) {
 
-
-
-
             // check if wf type is known (i.e. there is such field in the WorkflowConfig.yml)
             if (wfConfig.hasOwnProperty(wfType)) {
 
@@ -1055,6 +1081,7 @@ $(document).ready(function () {
                         cy.$('#' + outgoer.data('id')).select();
                     }
                 });
+
                 // $('#workflow-status-bar').find('.node-context-button').show();
 
                 // cy.$(':selected').unselect();
@@ -1122,6 +1149,7 @@ $(document).ready(function () {
 
                 } else {
 
+                    /*
                     var tmpl = HandlebarsTemplates['workflows/edam-input'];
                     var $edam = $(tmpl());
 
@@ -1130,15 +1158,17 @@ $(document).ready(function () {
                     $edam.edam({
                         level: 0,
                         types: ["Operation"],
-                        disclosed: 0
+                        disclosed: 1
                         // types: ["Topic", "Operation"]
                     });
+                    */
 
 
                     $('#workflow-toolbar-add').click(Workflows.setAddNodeState);
                     $('#workflow-toolbar-cancel').click(Workflows.cancelState);
                     $('#workflow-toolbar-edit').click(Workflows.edit);
                     $('#workflow-toolbar-link').click(Workflows.setLinkNodeState);
+
                     $('#workflow-toolbar-undo').hide();
                     $('#workflow-toolbar-redo').hide();
                     // $('#workflow-toolbar-add-child').click(Workflows.addChild);
@@ -1207,7 +1237,6 @@ $(document).ready(function () {
             }
         });
     }
-
 
 
 });
