@@ -1,0 +1,110 @@
+@charset "UTF-8";
+/* line 1, edam.scss */
+.edam {
+  position: relative;
+  /* Safari */
+}
+/* line 4, edam.scss */
+.edam label {
+  font-weight: normal !important;
+}
+/* line 8, edam.scss */
+.edam label:hover {
+  color: cornflowerblue;
+}
+/* line 13, edam.scss */
+.edam ul, .edam li {
+  margin: 0;
+  padding: 0;
+}
+/* line 18, edam.scss */
+.edam li {
+  margin-left: 15px;
+}
+/* line 22, edam.scss */
+.edam .term {
+  display: none;
+  position: relative;
+}
+/* line 27, edam.scss */
+.edam i.form-info {
+  position: relative;
+  top: -3px;
+  left: 3px;
+}
+/* line 33, edam.scss */
+.edam .disclosure {
+  cursor: pointer;
+  position: absolute;
+  top: 2px;
+  left: -15px;
+}
+/* line 41, edam.scss */
+.edam .disclosed .disclosure {
+  position: absolute;
+}
+/* line 52, edam.scss */
+.edam .info {
+  display: none;
+  background-color: #d9edf7;
+  padding: 5px 10px 0.1px 10px;
+  border-radius: 5px;
+  position: relative;
+  top: -5px;
+}
+/* line 60, edam.scss */
+.edam .info p {
+  margin-bottom: 5px;
+}
+/* line 65, edam.scss */
+.edam .term.shown {
+  display: block;
+}
+/* line 69, edam.scss */
+.edam .synonym > label::after {
+  content: ' (by synonym)';
+  display: inline-block;
+  font-weight: 300;
+  color: #999;
+}
+/* line 76, edam.scss */
+.edam .clear {
+  display: inline-block;
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  display: none;
+  cursor: pointer;
+}
+/* line 87, edam.scss */
+.edam .spinner {
+  display: inline-block;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  border: 2px solid #cccccc;
+  border-radius: 50%;
+  border-top: 2px solid #3498db;
+  width: 12px;
+  height: 12px;
+  -webkit-animation: spin 500ms linear infinite;
+  /* Safari */
+  animation: spin 500ms linear infinite;
+  display: none;
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

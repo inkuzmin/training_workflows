@@ -1,7 +1,14 @@
 {
   "name": "workflows",
   "version": "0.0.1",
-  "dependencies": {},
+  "private": true,
+  "scripts": {
+    "dev": "grunt",
+    "demo": "http-server"
+  },
+  "dependencies": {
+    "http-server": "^0.11.1"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-compass": "^1.1.1",

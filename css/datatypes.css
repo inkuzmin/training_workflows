@@ -1,0 +1,58 @@
+/* line 1, datatypes.scss */
+.field {
+  margin-bottom: 10px;
+}
+/* line 4, datatypes.scss */
+.field ul, .field li {
+  margin: 0;
+  padding: 0;
+}
+/* line 9, datatypes.scss */
+.field .muted {
+  font-weight: 300;
+}
+
+/* line 17, datatypes.scss */
+.field.text .ui-state-highlight {
+  height: 34px;
+  padding: 6px 12px;
+  margin-bottom: 5px;
+  background-color: #f0f0f0;
+}
+/* line 24, datatypes.scss */
+.field.text .input {
+  display: flex;
+  align-items: baseline;
+}
+/* line 32, datatypes.scss */
+.field.text .input .remove {
+  margin-left: 5px;
+  transition: color 0.1s;
+  cursor: pointer;
+}
+/* line 36, datatypes.scss */
+.field.text .input .remove:hover {
+  color: red;
+}
+
+/* line 47, datatypes.scss */
+.field.multiple-choice .ui-state-highlight {
+  height: 64px;
+  margin-bottom: 5px;
+  background-color: #f0f0f0;
+}
+/* line 54, datatypes.scss */
+.field.multiple-choice .answer > div {
+  display: flex;
+  align-items: baseline;
+}
+/* line 62, datatypes.scss */
+.field.multiple-choice .answer > div .remove {
+  margin-left: 5px;
+  transition: color 0.1s;
+  cursor: pointer;
+}
+/* line 66, datatypes.scss */
+.field.multiple-choice .answer > div .remove:hover {
+  color: red;
+}

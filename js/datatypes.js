@@ -88,18 +88,17 @@ Workflows.DataTypeView = {
 
             $edam.on('edams:unselect', function(e, value){
                 data.data.terms.pop(value);
-
                 cy.$(':selected').data.color = 'undefined';
                 cy.$(':selected').style({'background-color': "lightgrey", 'background-opacity': 0.8});
-
                 cy.$(':selected').descendants().style({'background-color': "lightgrey", 'background-opacity': 0.8});
-
-
             });
-
             return $edam;
+        },
+
+        draw: function () {
 
         }
+
     },
     InputTypeOntologyTerm: {
         render: function (data) {

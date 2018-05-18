@@ -1,0 +1,1158 @@
+@charset "UTF-8";
+/* line 1, datatypes.scss */
+.field {
+  margin-bottom: 10px;
+}
+/* line 4, datatypes.scss */
+.field ul, .field li {
+  margin: 0;
+  padding: 0;
+}
+/* line 9, datatypes.scss */
+.field .muted {
+  font-weight: 300;
+}
+
+/* line 17, datatypes.scss */
+.field.text .ui-state-highlight {
+  height: 34px;
+  padding: 6px 12px;
+  margin-bottom: 5px;
+  background-color: #f0f0f0;
+}
+/* line 24, datatypes.scss */
+.field.text .input {
+  display: flex;
+  align-items: baseline;
+}
+/* line 32, datatypes.scss */
+.field.text .input .remove {
+  margin-left: 5px;
+  transition: color 0.1s;
+  cursor: pointer;
+}
+/* line 36, datatypes.scss */
+.field.text .input .remove:hover {
+  color: red;
+}
+
+/* line 47, datatypes.scss */
+.field.multiple-choice .ui-state-highlight {
+  height: 64px;
+  margin-bottom: 5px;
+  background-color: #f0f0f0;
+}
+/* line 54, datatypes.scss */
+.field.multiple-choice .answer > div {
+  display: flex;
+  align-items: baseline;
+}
+/* line 62, datatypes.scss */
+.field.multiple-choice .answer > div .remove {
+  margin-left: 5px;
+  transition: color 0.1s;
+  cursor: pointer;
+}
+/* line 66, datatypes.scss */
+.field.multiple-choice .answer > div .remove:hover {
+  color: red;
+}
+
+/* line 1, edam.scss */
+.edam {
+  position: relative;
+  /* Safari */
+}
+/* line 4, edam.scss */
+.edam label {
+  font-weight: normal !important;
+}
+/* line 8, edam.scss */
+.edam label:hover {
+  color: cornflowerblue;
+}
+/* line 13, edam.scss */
+.edam ul, .edam li {
+  margin: 0;
+  padding: 0;
+}
+/* line 18, edam.scss */
+.edam li {
+  margin-left: 15px;
+}
+/* line 22, edam.scss */
+.edam .term {
+  display: none;
+  position: relative;
+}
+/* line 27, edam.scss */
+.edam i.form-info {
+  position: relative;
+  top: -3px;
+  left: 3px;
+}
+/* line 33, edam.scss */
+.edam .disclosure {
+  cursor: pointer;
+  position: absolute;
+  top: 2px;
+  left: -15px;
+}
+/* line 41, edam.scss */
+.edam .disclosed .disclosure {
+  position: absolute;
+}
+/* line 52, edam.scss */
+.edam .info {
+  display: none;
+  background-color: #d9edf7;
+  padding: 5px 10px 0.1px 10px;
+  border-radius: 5px;
+  position: relative;
+  top: -5px;
+}
+/* line 60, edam.scss */
+.edam .info p {
+  margin-bottom: 5px;
+}
+/* line 65, edam.scss */
+.edam .term.shown {
+  display: block;
+}
+/* line 69, edam.scss */
+.edam .synonym > label::after {
+  content: ' (by synonym)';
+  display: inline-block;
+  font-weight: 300;
+  color: #999;
+}
+/* line 76, edam.scss */
+.edam .clear {
+  display: inline-block;
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  display: none;
+  cursor: pointer;
+}
+/* line 87, edam.scss */
+.edam .spinner {
+  display: inline-block;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  border: 2px solid #cccccc;
+  border-radius: 50%;
+  border-top: 2px solid #3498db;
+  width: 12px;
+  height: 12px;
+  -webkit-animation: spin 500ms linear infinite;
+  /* Safari */
+  animation: spin 500ms linear infinite;
+  display: none;
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/* line 22, main.scss */
+.autocomplete-suggestions {
+  border: 1px solid #999;
+  background: #FFF;
+  overflow: auto;
+}
+
+/* line 23, main.scss */
+.autocomplete-suggestion {
+  padding: 2px 5px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* line 24, main.scss */
+.autocomplete-selected {
+  background: #F0F0F0;
+}
+
+/* line 25, main.scss */
+.autocomplete-suggestions strong {
+  font-weight: normal;
+  color: #3399FF;
+}
+
+/* line 26, main.scss */
+.autocomplete-group {
+  padding: 2px 5px;
+}
+
+/* line 27, main.scss */
+.autocomplete-group strong {
+  display: block;
+  border-bottom: 1px solid #000;
+}
+
+/* line 32, main.scss */
+#cy {
+  height: 650px;
+  width: 100%;
+}
+
+/* line 37, main.scss */
+.resourceCard {
+  padding: 10px;
+  background: rgba(51, 122, 183, 0.08);
+  margin: 2px;
+}
+
+/* line 43, main.scss */
+.embedded-container {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+}
+/* line 50, main.scss */
+.embedded-container .workflow-diagram-wrapper, .embedded-container .workflow-diagram-container, .embedded-container .workflow-diagram-content {
+  height: 100%;
+}
+/* line 54, main.scss */
+.embedded-container #cy {
+  height: 100% !important;
+  max-height: none !important;
+}
+
+/* line 60, main.scss */
+.workflow-toolbar-wrapper {
+  background-color: #DDDDDD;
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+/* line 66, main.scss */
+#workflow-toolbar {
+  text-align: right;
+  margin-bottom: 5px;
+}
+
+/* line 71, main.scss */
+#workflow-status-bar {
+  line-height: 34px;
+  padding: 5px 10px;
+  background: #efefef;
+  height: 46px;
+}
+
+/* line 79, main.scss */
+#workflow-status-message {
+  float: left;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+/* line 88, main.scss */
+#workflow-save-warning {
+  float: left;
+  padding: 6px;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+/* Hide the border from the predefined colour selector */
+/* line 99, main.scss */
+.simplecolorpicker span.color:hover, .simplecolorpicker span.color[data-selected],
+.simplecolorpicker span.color[data-selected]:hover {
+  border-color: transparent !important;
+}
+
+/* line 104, main.scss */
+#main-container.workflows-container {
+  padding: 0px 10px 10px 10px;
+  max-width: none;
+}
+
+/* line 109, main.scss */
+.workflow-diagram-wrapper {
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+/* line 114, main.scss */
+.workflow-diagram-container {
+  display: flex;
+}
+
+/* line 118, main.scss */
+#workflow-diagram-sidebar {
+  flex-shrink: 0;
+  width: 300px;
+  border-left: 1px solid #ccc;
+  background-color: #fff;
+  z-index: 10;
+}
+/* line 125, main.scss */
+#workflow-diagram-sidebar img {
+  max-width: 100%;
+}
+
+/* line 130, main.scss */
+#workflow-diagram-content {
+  flex-grow: 1;
+}
+
+/* line 134, main.scss */
+#workflow-diagram-sidebar-desc {
+  padding: 10px;
+}
+
+/* line 138, main.scss */
+.split {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* line 147, main.scss */
+.gutter {
+  background-color: #eee;
+  border-left: 1px solid #ccc;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  z-index: 11;
+}
+
+/* line 155, main.scss */
+.gutter.gutter-horizontal {
+  background-image: url("../img/vertical.png");
+  cursor: ew-resize;
+}
+
+/* line 160, main.scss */
+.gutter.gutter-vertical {
+  background-image: url("../img/horizontal.png");
+  cursor: ns-resize;
+}
+
+/* line 165, main.scss */
+.associated-resource {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+/* line 175, main.scss */
+#node-modal, #edge-modal {
+  z-index: 5000;
+  /* Has to be less than 9999 or autocompleter suggestions are hidden! */
+}
+
+/* line 179, main.scss */
+#workflow-status-selected-node {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* line 185, main.scss */
+.embed-floating-link {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  z-index: 20000;
+}
+
+/* line 196, main.scss */
+html {
+  height: 100%;
+  position: relative;
+}
+
+/* line 201, main.scss */
+body {
+  min-width: 320px;
+  position: relative;
+  margin: 0;
+  padding-bottom: 150px;
+  min-height: 100%;
+}
+
+/* line 209, main.scss */
+.footer {
+  padding: 0;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #ddd;
+}
+/* line 216, main.scss */
+.footer .footer-logo {
+  margin: 0 5px;
+}
+/* line 218, main.scss */
+.footer .footer-logo img {
+  height: 48px;
+}
+
+/* line 222, main.scss */
+div.wrapper {
+  *zoom: 1;
+  background-color: #FFF;
+  border: 1px solid #cccccc;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  display: flex;
+}
+
+/* line 240, main.scss */
+#main-container, #header-container {
+  max-width: 1200px;
+}
+
+/* line 244, main.scss */
+#content {
+  padding: 15px;
+  flex-grow: 1;
+}
+
+/* line 249, main.scss */
+#sidebar {
+  width: 280px;
+  border-right: 1px solid #cccccc;
+  padding: 0;
+  flex-shrink: 0;
+}
+/* line 260, main.scss */
+#sidebar table tr td.h4 {
+  padding-left: 10px;
+}
+/* line 264, main.scss */
+#sidebar table tr td {
+  padding-left: 20px;
+}
+/* line 268, main.scss */
+#sidebar table tr td a {
+  color: #000000;
+  padding: 3px;
+  text-decoration: none;
+}
+/* line 274, main.scss */
+#sidebar table tr td a:hover {
+  background-color: #B0C3C9;
+  color: #ffffff;
+  padding: 3px;
+  text-decoration: none;
+}
+
+/* line 282, main.scss */
+#sidebar-toggle {
+  display: none;
+}
+
+/* line 287, main.scss */
+#sidebar-header {
+  display: none;
+}
+
+/* line 292, main.scss */
+.workflow_image {
+  width: 100%;
+}
+
+/* line 296, main.scss */
+.profile {
+  margin-bottom: 30px;
+}
+
+/* line 301, main.scss */
+.breadcrumbs {
+  margin-top: 5px;
+}
+
+/* line 304, main.scss */
+.breadcrumb {
+  margin-bottom: 10px;
+}
+
+/* line 309, main.scss */
+.empty {
+  color: #aaaaaa;
+  font-style: italic;
+}
+
+/* line 315, main.scss */
+.alert {
+  margin-bottom: 0px;
+  margin-top: 5px;
+}
+
+/* line 321, main.scss */
+.row {
+  margin: 10px 0px 10px 0px;
+}
+
+/* line 327, main.scss */
+.dont-break-out {
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -ms-word-break: break-all;
+  /* This is the dangerous one in WebKit, as it breaks things wherever */
+  word-break: break-all;
+  /* Instead use this non-standard one: */
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+/* line 347, main.scss */
+.wide .media-item {
+  width: 186px;
+}
+
+/* line 351, main.scss */
+.listing_image {
+  max-width: 150px;
+  max-height: 65px;
+}
+
+/* line 357, main.scss */
+ul.unstyled {
+  margin-left: 0px;
+  list-style: outside none none;
+  padding-left: 0px;
+}
+
+/* line 363, main.scss */
+.nav-simple {
+  margin: 0px;
+  list-style: outside none none;
+  padding-bottom: 0px;
+}
+
+/* line 369, main.scss */
+.nav-simple > li {
+  padding: 0px;
+  border-bottom: 1px dotted #DDD;
+}
+
+/* line 374, main.scss */
+.nav-simple > li:last-of-type {
+  border-bottom: 0px none;
+}
+
+/* line 378, main.scss */
+.nav-item {
+  padding: 7px 20px;
+}
+
+/* line 382, main.scss */
+.nav-item > a {
+  position: relative;
+  display: block;
+  color: #333;
+  padding: 7px 20px;
+  text-decoration: none;
+}
+
+/* line 395, main.scss */
+.nav-item > a:hover {
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+
+/* line 400, main.scss */
+.nav-item.active > a {
+  position: relative;
+  color: #ffffff;
+}
+
+/* line 406, main.scss */
+.nav-item.active > a:hover {
+  color: #ffffff;
+}
+
+/* line 414, main.scss */
+.nav-heading {
+  padding: 10px;
+  background-color: #F6F6F6;
+  margin: 0px;
+}
+
+/* line 420, main.scss */
+.nav-heading-darker {
+  background-color: #dddddd;
+  padding: 10px;
+  margin: 0px 0px 5px 0px;
+}
+
+/* line 426, main.scss */
+.filter-button {
+  color: #ffffff;
+}
+
+/* line 435, main.scss */
+.facet-count {
+  float: right;
+  color: #999;
+}
+
+/* line 440, main.scss */
+.show-page-description {
+  font-size: medium;
+  padding: 50px 0;
+}
+
+/* line 445, main.scss */
+.tiny-content-provider-logo {
+  max-width: 32px;
+  border-radius: 2px;
+  padding-left: 5px;
+}
+
+/* line 451, main.scss */
+.small-content-provider-logo {
+  max-width: 64px;
+  border-radius: 4px;
+  padding-left: 10px;
+}
+
+/* line 457, main.scss */
+.medium-content-provider-logo {
+  max-width: 98%;
+  margin: 0px 10px 0px 0px;
+}
+
+/* line 463, main.scss */
+.search-results-count {
+  font-size: medium;
+  font-weight: bold;
+  margin-top: 5px;
+  padding-top: 5px;
+  padding-bottom: 10px;
+}
+
+/* line 471, main.scss */
+.welcome-text {
+  padding: 20px;
+  text-align: center;
+}
+
+/* line 476, main.scss */
+.panel-heading {
+  display: block;
+}
+
+/* line 480, main.scss */
+.panel-default .panel-title {
+  font-size: 13px;
+  color: #005d7a;
+}
+
+/* line 485, main.scss */
+.panel-default .panel-title a {
+  text-decoration: none;
+  color: #005d7a;
+}
+
+/* line 490, main.scss */
+.panel-heading .accordion-toggle:after {
+  /* symbol for "opening" panels */
+  font-family: 'Glyphicons Halflings';
+  /* essential for enabling glyphicon */
+  content: "\e113";
+  /* adjust as needed, taken from bootstrap.css */
+  float: right;
+  /* adjust as needed */
+}
+
+/* line 497, main.scss */
+.panel-heading .accordion-toggle.collapsed:after {
+  /* symbol for "collapsed" panels */
+  content: "\e114";
+  /* adjust as needed, taken from bootstrap.css */
+}
+
+/* line 502, main.scss */
+.panel-body {
+  padding-bottom: 0px;
+}
+
+/* line 506, main.scss */
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  color: #337ab7;
+}
+
+/* line 510, main.scss */
+.content_action {
+  float: right;
+  margin-top: -5px;
+  margin-right: -7px;
+}
+
+/* line 517, main.scss */
+abbr, accronym {
+  border-bottom: 0px !important;
+}
+
+/*try adding !important  after 0px if doesn't work*/
+/* line 524, main.scss */
+.multiple-input-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* line 529, main.scss */
+.multiple-list-item {
+  padding: 3px;
+  margin: 3px 3px 3px 0px;
+  background-color: whitesmoke;
+  border-radius: 4px;
+  width: 43%;
+  display: inline;
+}
+
+/* line 538, main.scss */
+.multiple-input {
+  width: 85%;
+  display: inline;
+}
+
+/* line 543, main.scss */
+.multiple-input-delete {
+  background: none;
+  border: none;
+}
+
+/* line 548, main.scss */
+.dropdown-option {
+  cursor: pointer;
+}
+
+/* line 556, main.scss */
+.dropdown-option-delete {
+  background: none;
+  border: none;
+}
+
+/* line 561, main.scss */
+.info-block {
+  color: #005d7a;
+  float: right;
+  font-size: 20px;
+  margin: 0px;
+  width: 28px;
+}
+
+/* The max width is dependant on the container (more info below) */
+/* line 570, main.scss */
+.popover {
+  max-width: 500px !important;
+  /* Max Width of the popover (depending on the container!) */
+}
+
+/* line 575, main.scss */
+.btn {
+  white-space: normal !important;
+}
+
+/* line 580, main.scss */
+.page-header {
+  margin: 20px 0 20px;
+}
+
+/* line 584, main.scss */
+.keyword-pill {
+  color: #ffffff;
+  margin-bottom: 5px;
+  display: inline-block;
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  background-image: none;
+  border: 1px solid transparent;
+  white-space: normal !important;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* line 607, main.scss */
+.vertical-align {
+  display: flex;
+  flex-direction: row;
+}
+
+/* line 612, main.scss */
+.vertical-align > [class^="col-"],
+.vertical-align > [class*=" col-"] {
+  display: flex;
+  align-items: center;
+  /* Align the flex-items vertically */
+}
+
+/* line 619, main.scss */
+ul.featureblocks {
+  padding: 10px 0;
+  margin: 0 -10px;
+  list-style: none;
+  overflow: auto;
+}
+/* line 625, main.scss */
+ul.featureblocks li {
+  float: left;
+  width: 25%;
+  padding: 0 12px;
+  border-right: 1px dotted #ccc;
+}
+/* line 630, main.scss */
+ul.featureblocks li:last-child {
+  border: none;
+}
+/* line 633, main.scss */
+ul.featureblocks li h2 {
+  margin-top: 10px;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: normal;
+}
+/* line 639, main.scss */
+ul.featureblocks li a {
+  color: #444;
+}
+/* line 642, main.scss */
+ul.featureblocks li p {
+  margin: 5px 0;
+}
+
+/* line 648, main.scss */
+.searchbox {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  padding: 20px;
+  background-color: #efefef;
+  position: relative;
+  box-shadow: 0 0 5px #333;
+  -webkit-box-shadow: 0 0 5px #333;
+  -moz-box-shadow: 0 0 5px #333;
+  -webkit-border-radius: 3px !important;
+  -moz-border-radius: 3px !important;
+  border-radius: 3px !important;
+  text-align: center;
+}
+
+/* line 666, main.scss */
+.homepage #sb-search {
+  background-color: transparent;
+  padding: 0;
+}
+
+/* line 671, main.scss */
+sup {
+  vertical-align: top;
+  position: relative;
+  top: 5px;
+}
+
+/* line 677, main.scss */
+.announcement {
+  color: #333333;
+  border: 1px solid #DDD;
+  background: #FFFFCC;
+  padding: 0.3em 0.6em;
+  margin-bottom: 1em;
+  line-height: 1.7;
+}
+
+/* line 686, main.scss */
+#front-page-announcement {
+  font-size: 120%;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* line 692, main.scss */
+#flash-container {
+  text-align: center;
+}
+
+/* line 696, main.scss */
+.schemaorg-element {
+  display: none;
+}
+
+/* line 700, main.scss */
+.responsive-search-box {
+  float: right;
+  width: 300px;
+}
+
+/* line 707, main.scss */
+.info-box .info-box-header {
+  padding: 10px;
+  background-color: #F6F6F6;
+  border-radius: 4px;
+}
+/* line 712, main.scss */
+.info-box .info-box-content {
+  margin-top: 10px;
+}
+
+/* line 717, main.scss */
+.muted {
+  color: #999;
+}
+
+/* line 721, main.scss */
+.preview-image {
+  overflow: auto;
+}
+/* line 724, main.scss */
+.preview-image > img {
+  width: 100px;
+  max-height: 150px;
+  margin: 0 10px 10px 0;
+  float: left;
+}
+
+/* line 732, main.scss */
+.bounding-box {
+  padding: 19px;
+  margin-bottom: 20px;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+}
+
+/* line 739, main.scss */
+.info-icon {
+  font-size: 24px;
+}
+
+/* line 742, main.scss */
+.info-icon-small {
+  font-size: 16px;
+}
+
+/* line 745, main.scss */
+.info-icon-large {
+  font-size: 48px;
+}
+
+/* line 749, main.scss */
+.gap {
+  padding: 0px 5px;
+}
+
+/* line 753, main.scss */
+.dropdown-option-delete, a.delete-list-item, a.delete-collaboration {
+  vertical-align: middle;
+  font-weight: bold;
+  font-size: 120%;
+}
+
+/* line 764, main.scss */
+.tool-suggestions-header {
+  margin-bottom: 20px;
+}
+
+/* line 767, main.scss */
+.external-links {
+  margin-top: 10px;
+}
+
+/* line 771, main.scss */
+.fresh-icon {
+  color: green;
+}
+
+/* line 775, main.scss */
+.stale-icon {
+  color: orangered;
+}
+
+/* line 779, main.scss */
+.days_ago_text {
+  color: grey;
+  font-style: italic;
+}
+
+/* line 784, main.scss */
+.latest_resource_description {
+  min-width: 500px;
+  min-height: 20px;
+}
+
+/* line 789, main.scss */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  /* optional. only if you want the items to wrap */
+  justify-content: center;
+  /* for horizontal alignment */
+}
+
+/* line 795, main.scss */
+#gravatar_image {
+  margin-bottom: 10px;
+}
+
+/* line 799, main.scss */
+.btn-elixir {
+  background-image: url("elixir_white_small.png");
+  background-repeat: no-repeat;
+  background-position: 7px 7px;
+  padding-left: 32px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+/* line 809, main.scss */
+div.legal-block {
+  max-width: 800px;
+  margin: auto;
+}
+
+/* line 814, main.scss */
+input.loading {
+  background: url("ajax-loader.gif") no-repeat right center;
+}
+
+/* line 818, main.scss */
+.btn.loading {
+  padding-right: 24px;
+  background: url("ajax-loader.gif") no-repeat right center;
+}
+
+/* line 823, main.scss */
+.url-wrap {
+  display: inline-block;
+  word-wrap: break-word;
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+/* line 830, main.scss */
+.loading_image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* line 836, main.scss */
+.bs-type-selectors li {
+  display: inline-block;
+  padding: 5px;
+}
+
+/* line 841, main.scss */
+input[type=checkbox].field-lock {
+  display: none;
+}
+
+/* line 845, main.scss */
+input[type=checkbox].field-lock + label:before {
+  font-family: FontAwesome;
+  cursor: pointer;
+  display: inline-block;
+  content: "\f09c";
+  letter-spacing: 10px;
+  margin-left: 0.5em;
+  vertical-align: middle;
+  width: 1.5em;
+}
+
+/* line 856, main.scss */
+input[type=checkbox].field-lock:checked + label:before {
+  content: "\f023";
+}
+
+/* line 860, main.scss */
+input[type=checkbox].field-lock:checked + label:before, .field-lock-example-locked {
+  font-size: 110%;
+}
+
+/* line 865, main.scss */
+input[type=checkbox].field-lock + label:before, .field-lock-example-open {
+  font-size: 110%;
+}
+
+/* line 870, main.scss */
+.keyword-button {
+  margin-right: 5px;
+}
+
+/* line 874, main.scss */
+.external-button {
+  margin-right: 5px;
+}
+
+/* line 878, main.scss */
+.alert-info a {
+  text-decoration: underline;
+}
+
+/* line 883, main.scss */
+#why-register ul {
+  font-size: 120%;
+}
+/* line 886, main.scss */
+#why-register ul li {
+  margin: 1em 0;
+}
+
+/* line 894, main.scss */
+.form-control {
+  margin-bottom: 5px;
+}
+
+/* line 898, main.scss */
+.highlighted {
+  padding-left: 3px;
+  border-left: 5px solid;
+}
+
+/* line 903, main.scss */
+.form-info {
+  cursor: pointer;
+}
+
+/* line 908, main.scss */
+.field label {
+  position: relative;
+  top: 5px;
+}
+
+/* line 914, main.scss */
+.grip {
+  cursor: all-scroll;
+}
