@@ -12,6 +12,7 @@ EducationalResource:
         PromptPosition: 1
         Required: true
         Multiple: false
+        UseAsTitle: Key
         Fields:
           - LearningOutcomes:
             FieldName: Learning Outcomes
@@ -99,6 +100,7 @@ ConceptMap:
         FontColour: null
         PromptPosition: 0
         Required: true
+        UseAsTitle: Value
         Multiple: true
         Fields:
           - Operation:
@@ -122,13 +124,13 @@ ConceptMap:
             Multiple: true
             DataType: OutputTypeOntologyTerm
             MarkdownFormatting: false
-          - Format:
-            FieldName: File Format
-            InfoText: Select an EDAM file format type that defines the file format of the output
-            Required: false
-            Multiple: true
-            DataType: FormatTypeOntologyTerm
-            MarkdownFormatting: false
+#          - Format:
+#            FieldName: File Format
+#            InfoText: Select an EDAM file format type that defines the file format of the output
+#            Required: false
+#            Multiple: true
+#            DataType: FormatTypeOntologyTerm
+#            MarkdownFormatting: false
           - RequiredConditions:
             FieldName: Required Step
             InfoText: Is this a necessary step of the workflow or can it be skipped.
