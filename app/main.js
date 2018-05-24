@@ -14,7 +14,7 @@ console.log(YAML);
 
 var Handlebars = require('./vendor/handlebars.runtime');
 
-window.HandlebarsTemplates = {
+window.HandlebarsTemplates = _.extend(window.HandlebarsTemplates, {
     'workflows/sidebar_content': require("../templates/sidebar_content.hbs"),
 
     'workflows/fields/MultipleChoice': require("../templates/multiple_choice.hbs"),
@@ -28,7 +28,7 @@ window.HandlebarsTemplates = {
     // concept maps
     'workflows/EdamInput': require("../templates/edam_input.hbs"),
     'workflows/edam': require("../templates/edam.hbs"),
-};
+});
 
 
 
