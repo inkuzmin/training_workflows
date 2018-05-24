@@ -1054,7 +1054,7 @@ $(document).ready(function () {
             // check if wf type is known (i.e. there is such field in the WorkflowConfig.yml)
             if (wfConfig.hasOwnProperty(wfType)) {
 
-                wfType = getParameterByName('type'); // || wfType; // FIXME: DEBUG
+                wfType = 'EducationalResource'; // getParameterByName('type'); // || wfType; // FIXME: DEBUG
 
                 console.log(wfType);
 
