@@ -1,4 +1,4 @@
-Workflows.DataType = {
+window.Workflows.DataType = {
     Text: {
         init: function () {
             return {

@@ -1,0 +1,37 @@
+{{#*inline "input"}}
+    <li class="input">
+        <span class="grip glyphicon glyphicon-option-vertical"></span>
+        <input type="text" class="form-control" value="{{this}}">
+        <span class="remove glyphicon glyphicon-remove"></span>
+    </li>
+{{/inline}}
+
+<div class="field text" data-field-type="text" id="{{ id }}">
+    <label for="node-modal-form-title">{{ name }}
+        {{#if required}}
+            <span class="muted">(required)</span>
+        {{/if}}
+
+    </label>
+
+    {{#if info}}
+        <i class="form-info glyphicon glyphicon-info-sign"></i>
+        <div class="bg-info" style="display:none;">
+            <p class="text-info">
+                {{ info }}
+            </p>
+        </div>
+    {{/if}}
+
+    <ul class="sort-inputs">
+        {{#each data.inputs}}
+            {{> input}}
+        {{/each}}
+    </ul>
+
+    {{#if multiple}}
+        <button class="btn btn-default add-input">
+            Add
+        </button>
+    {{/if}}
+</div>

@@ -1,6 +1,38 @@
-var MarkdownIt = window.markdownit();
+var $ = require('./vendor/jquery');
+var _ = require('./vendor/underscore');
+require('./vendor/bootstrap');
+var MarkdownIt = require('./vendor/markdown-it');
+window.cytoscape = require('./vendor/cytoscape');
+require('./vendor/cytoscape-panzoom');
+var Split = require('./vendor/split');
+var FileSaver = require('./vendor/FileSaver');
+require('./vendor/jquery-ui');
+require('./vendor/yaml');
 
-var Workflows = {
+var YAML = window.YAML;
+console.log(YAML);
+
+var Handlebars = require('./vendor/handlebars.runtime');
+
+window.HandlebarsTemplates = {
+    'workflows/sidebar_content': require("../templates/sidebar_content.hbs"),
+
+    'workflows/fields/MultipleChoice': require("../templates/multiple_choice.hbs"),
+    'workflows/fields/Text': require("../templates/text.hbs"),
+
+    // also partials
+    'workflows/fields/MultipleChoiceAnswer': require("../templates/multiple_choice_answer.hbs"),
+    'workflows/fields/TextInput': require("../templates/text_input.hbs"),
+
+
+    // concept maps
+    'workflows/EdamInput': require("../templates/edam_input.hbs"),
+    'workflows/edam': require("../templates/edam.hbs"),
+};
+
+
+
+window.Workflows = {
     formSubmitted: false,
 
     handleClick: function (e) {
@@ -642,17 +674,14 @@ var Workflows = {
                     color: params.color,
                     font_color: params.font_color,
                     nodetype: params.nodetype,
-                    multiple: params.multiple
+                    multiple: params.multiple,
+                    width: 500
                 }
             });
 
             if (position) {
-
                 console.log("trying to render node");
-
             } else {
-
-
                 // if there is no position we are in sequential mode
                 // 1. check if there are successors
 
@@ -700,47 +729,49 @@ var Workflows = {
                     }
 
                 }
-
-
-
-
-
-
-
-
-
             }
 
-            _.each(params.fields, function (field, i) {
-                var pos;
-                if (position) {
-                    pos = {
-                        x: position.x,
-                        y: position.y + (i * 50)
-                    }
-                } else {
+
+            switch (params.nodetype) {
+                case "LearningObejectivesAndOutcomes":
+                case "Task":
+                case "Quiz":
+                case "FurtherReading":
+                    var origX = 0;
                     if (Workflows.selected) {
                         if (Workflows.selected.descendants().length > 0) {
-                            pos = {
-                                x: parseInt(Workflows.selected.descendants()[0].position().x) + 200,
-                                y: i * 50
-                            }
+                            origX = parseInt(Workflows.selected.descendants()[0].position().x) + 200;
                         } else {
-                            pos = {
-                                x: parseInt(Workflows.selected.position().x) + 200,
-                                y: i * 50
-                            }
-                        }
-
-                    } else {
-                        pos = {
-                            x: 0,
-                            y: i * 50
+                            origX = parseInt(Workflows.selected.position().x) + 200;
                         }
                     }
-                }
 
-                console.log(field.datatype);
+                    var calcPosition = Workflows.Layout.vertical({
+                        origX: origX,
+                        origY: 0,
+                        shiftY: 50
+                    });
+                    break;
+                case "Operation":
+                    var calcPosition = Workflows.Layout.operation({
+                        origX: position.x,
+                        origY: position.y,
+                        shiftY: 50,
+                        inputWidth: 200
+                    });
+                    break;
+                default:
+                    throw new Error("unknown node type " + params.nodetype);
+                    break;
+            }
+
+
+
+            _.each(params.fields, function (field, i) {
+
+                var calc = calcPosition(field.datatype);
+                var pos = (calc && calc.position) || {x: 0, y: 0};
+                var width = (calc && calc.width) || 200;
 
                 cy.add({
                     data: {
@@ -754,9 +785,11 @@ var Workflows = {
                         required: field.required,
                         info: field.info,
                         multiple: field.multiple,
-                        data: Workflows.DataType[field.datatype].init()
+                        data: Workflows.DataType[field.datatype].init(),
+                        width: width
                     },
-                    position: pos
+                    position: pos,
+
                 });
 
                 if (i > 0) { // add property like "connected"
@@ -955,7 +988,8 @@ $(document).ready(function () {
                         'background-opacity': 0.8,
                         'text-valign': 'center',
                         'text-halign': 'center',
-                        'width': '150px',
+                        // 'width': '150px',
+                        'width': "data(width)",
                         'height': '30px',
                         'font-size': '9px',
                         'border-width': '1px',
@@ -980,7 +1014,8 @@ $(document).ready(function () {
                         'text-valign': 'top',
                         'text-halign': 'center',
                         'text-margin-y': '-2px',
-                        'width': '300px', // FIXME: should be auto
+                        // 'width': '300px', // FIXME: should be auto
+                        // width: "data(width)",
                         'height': '20px', // FIXME: should be auto
                         'font-size': '9px',
                         'color': '#111111'
@@ -1251,3 +1286,8 @@ function getParameterByName(name, url) {
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
+
+require('./datatypes');
+require('./layout');
+
+Workflows.formSubmitted = false;
