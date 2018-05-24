@@ -1,6 +1,38 @@
-var MarkdownIt = window.markdownit();
+var $ = require('./vendor/jquery');
+var _ = require('./vendor/underscore');
+require('./vendor/bootstrap');
+var MarkdownIt = require('./vendor/markdown-it');
+window.cytoscape = require('./vendor/cytoscape');
+require('./vendor/cytoscape-panzoom');
+var Split = require('./vendor/split');
+var FileSaver = require('./vendor/FileSaver');
+require('./vendor/jquery-ui');
+require('./vendor/yaml');
 
-var Workflows = {
+var YAML = window.YAML;
+console.log(YAML);
+
+var Handlebars = require('./vendor/handlebars.runtime');
+
+window.HandlebarsTemplates = {
+    'workflows/sidebar_content': require("../templates/sidebar_content.hbs"),
+
+    'workflows/fields/MultipleChoice': require("../templates/multiple_choice.hbs"),
+    'workflows/fields/Text': require("../templates/text.hbs"),
+
+    // also partials
+    'workflows/fields/MultipleChoiceAnswer': require("../templates/multiple_choice_answer.hbs"),
+    'workflows/fields/TextInput': require("../templates/text_input.hbs"),
+
+
+    // concept maps
+    'workflows/EdamInput': require("../templates/edam_input.hbs"),
+    'workflows/edam': require("../templates/edam.hbs"),
+};
+
+
+
+window.Workflows = {
     formSubmitted: false,
 
     handleClick: function (e) {
@@ -1255,20 +1287,7 @@ function getParameterByName(name, url) {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+require('./datatypes');
+require('./layout');
 
-
-function Foo () {
-
-}
-
-Foo.prototype = {
-  bar: function () {
-      this
-  }
-};
-
-_.extends(Bar.prototype, Foo.prototype);
-
-
-
-var foo = new Foo();
+Workflows.formSubmitted = false;

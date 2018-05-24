@@ -1,0 +1,27 @@
+{{#*inline "edam"}}
+    <div class="edam">
+        <input type="text" class="form-control" autocomplete="off" placeholder="Type to search for a term..." />
+        <div class="spinner"></div>
+        <div class="clear">✖</div>
+        <ul class="terms">
+        </ul>
+        <div class="info"></div>
+    </div>
+{{/inline}}
+
+<div class="form-group" id="{{ id }}">
+    <label>{{ name }}</label>
+
+    {{#if required}}
+        {{> edam }}
+    {{/if}}
+
+    {{#if multiple}}
+        <button class="btn btn-default add-question">
+            Add
+        </button>
+        <button class="btn btn-default remove-question">
+            Remove
+        </button>
+    {{/if}}
+</div>
