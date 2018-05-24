@@ -1,0 +1,147 @@
+EducationalResource:
+  WorkflowTypeName: Education Resource
+  ConfigOptions:
+    hideToolbar: true
+    allowNodeReposition: false
+    wizard: true
+  NodeTypes:
+    - LearningObejectivesAndOutcomes:
+        NodeTypeName: Learning Objectives and Outcomes
+        Colour: "#802301"
+        FontColour: "#ffffff"
+        PromptPosition: 1
+        Required: true
+        Multiple: false
+        UseAsTitle: Key
+        Fields:
+          - LearningOutcomes:
+            FieldName: Learning Outcomes
+            InfoText: This step is designed to make you think about what the user… blah blah
+            Required: true
+            Multiple: true
+            DataType: Text
+            MarkdownFormatting: true
+          - LearningObjectives:
+            FieldName: Learning Objectives
+            InfoText: This step is designed to make you think about what the user… blah blah
+            Required: true
+            Multiple: true
+            DataType: Text
+            MarkdownFormatting: true
+    - Task:
+        NodeTypeName: Task
+        Colour: "#802020"
+        FontColour: "#ffffff"
+        PromptPosition: 2
+        Required: false
+        Multiple: true
+        Fields:
+          - Step:
+            FieldName: Steps
+            InfoText: Guide the user through a simple step. The step should contain simple tasks that require blah blah
+            Required: true
+            Multiple: false
+            DataType: Text
+            MarkdownFormatting: true
+          - Reflection:
+            FieldName: Reflections
+            InfoText: What should the user reflect on to help them understand what task has been performed blah blah
+            Required: true
+            Multiple: false
+            DataType: Text
+            MarkdownFormatting: true
+          - Background:
+            FieldName: Background Reading
+            InfoText: Background text describing the process the trainee has undertaken. Either links or a few paragraphs.
+            Required: true
+            Multiple: false
+            DataType: Text
+            MarkdownFormatting: true
+    - Quiz:
+        NodeTypeName: Quiz
+        Colour: "#302050"
+        FontColour: "#ffffff"
+        PromptPosition: 3
+        Required: false
+        Multiple: true
+        Fields:
+          - QuizQuestion:
+            FieldName: Quiz Question
+            InfoText: Write some quiz questions that challenge the trainee to prove their understanding of the topic.
+            Required: false
+            Multiple: true
+            DataType: MultipleChoice
+            MarkdownFormatting: false
+    - FurtherReading:
+        NodeTypeName: Further Reading
+        Colour: "#102050"
+        FontColour: "#ffffff"
+        PromptPosition: 4
+        Required: false
+        Multiple: false
+        Fields:
+          - FurtherReading:
+            FieldName: Further Reading
+            InfoText: Add some further reading about this topic
+            Required: false
+            Multiple: true
+            DataType: Text
+            MarkdownFormatting: true
+ConceptMap:
+  WorkflowTypeName: ConceptMap
+  ConfigOptions:
+    hideToolbar: false
+    allowNodeReposition: true
+    wizard: false
+  NodeTypes:
+    - Operation:
+        NodeTypeName: EDAM
+        Colour: null #set by operation type. Maybe have default colour though
+        FontColour: null
+        PromptPosition: 0
+        Required: true
+        UseAsTitle: Value
+        Multiple: true
+        Fields:
+          - Operation:
+            FieldName: EDAM Operation
+            InfoText: Select an EDAM operation that describes what type of operation this is. If it is missing, please contact BLAH.
+            Required: true
+            Multiple: false
+            DataType: OperationOntologyTerm
+            MarkdownFormatting: false
+          - Input:
+            FieldName: Input Type
+            InfoText: Select an EDAM input type that describes what parameters are required for this operation
+            Required: false
+            Multiple: true
+            DataType: InputTypeOntologyTerm
+            MarkdownFormatting: false
+          - Output:
+            FieldName: Output Type
+            InfoText: Select an EDAM output type that describes what data this operation produces
+            Required: false
+            Multiple: true
+            DataType: OutputTypeOntologyTerm
+            MarkdownFormatting: false
+#          - Format:
+#            FieldName: File Format
+#            InfoText: Select an EDAM file format type that defines the file format of the output
+#            Required: false
+#            Multiple: true
+#            DataType: FormatTypeOntologyTerm
+#            MarkdownFormatting: false
+          - RequiredConditions:
+            FieldName: Required Step
+            InfoText: Is this a necessary step of the workflow or can it be skipped.
+            Required: true
+            Multiple: false
+            DataType: RequiredConditions
+            MarkdownFormatting: false
+#          - RequiredConditions:
+#            FieldName: Required Conditions
+#            InfoText: The conditions on which this step can be skipped if required step is set to false
+#            Required: false
+#            Multiple: false
+#            DataType: Text
+#            MarkdownFormatting: true
