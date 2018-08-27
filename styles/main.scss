@@ -9,911 +9,925 @@
 
 // Mixins
 
-@mixin delete-cross {
-  font-weight: bold;
-  font-size: 120%;
-  color: $brand-danger;
+.wfjs {
 
-  &:hover {
-    color: lighten($brand-danger, 10%);
+  @mixin delete-cross {
+    font-weight: bold;
+    font-size: 120%;
+    color: $brand-danger;
+
+    &:hover {
+      color: lighten($brand-danger, 10%);
+    }
   }
-}
 
+  // Autocomplete
 
-// Autocomplete
-
-.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
-.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
-.autocomplete-selected { background: #F0F0F0; }
-.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
-.autocomplete-group { padding: 2px 5px; }
-.autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
-
-
-// Workflows' styles
-
-#cy {
-  height: 650px;
-  width: 100%;
-}
-
-.resourceCard {
-  padding: 10px;
-  background: rgba(51, 122, 183, 0.08);
-  margin: 2px;
-}
-
-.embedded-container {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  top: 0;
-  left: 0;
-
-  .workflow-diagram-wrapper, .workflow-diagram-container, .workflow-diagram-content {
-    height: 100%;
+  .autocomplete-suggestions {
+    border: 1px solid #999;
+    background: #FFF;
+    overflow: auto;
   }
+  .autocomplete-suggestion {
+    padding: 2px 5px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .autocomplete-selected {
+    background: #F0F0F0;
+  }
+  .autocomplete-suggestions strong {
+    font-weight: normal;
+    color: #3399FF;
+  }
+  .autocomplete-group {
+    padding: 2px 5px;
+  }
+  .autocomplete-group strong {
+    display: block;
+    border-bottom: 1px solid #000;
+  }
+
+  // Workflows' styles
 
   #cy {
-    height: 100% !important;
-    max-height: none !important;
+    height: 650px;
+    width: 100%;
   }
-}
 
-.workflow-toolbar-wrapper {
-  background-color: #DDDDDD;
-  padding: 5px;
-  border-bottom: 1px solid #ccc;
-}
-
-#workflow-toolbar {
-  text-align: right;
-  margin-bottom: 5px;
-}
-
-#workflow-status-bar {
-  line-height: 34px;
-  //margin-bottom: 10px;
-  padding: 5px 10px;
-  background: #efefef;
-  height: 46px;
-}
-
-#workflow-status-message {
-  float: left;
-  //background-color: $alert-info-bg;
-  padding: 6px;
-  //border: 1px solid $alert-info-border;
-  border-radius: 4px;
-  //color: $alert-info-text;
-}
-
-#workflow-save-warning {
-  float: left;
-  //background-color: $alert-warning-bg;
-  padding: 6px;
-  //border: 1px solid $alert-warning-border;
-  border-radius: 4px;
-  //color: $alert-warning-text;
-  margin-right: 10px;
-}
-
-/* Hide the border from the predefined colour selector */
-.simplecolorpicker span.color:hover, .simplecolorpicker span.color[data-selected],
-.simplecolorpicker span.color[data-selected]:hover {
-  border-color: transparent !important;
-}
-
-#main-container.workflows-container {
-  padding: 0px 10px 10px 10px;
-  max-width: none;
-}
-
-.workflow-diagram-wrapper {
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-}
-
-.workflow-diagram-container {
-  display: flex;
-}
-
-#workflow-diagram-sidebar {
-  flex-shrink: 0;
-  width: 300px;
-  border-left: 1px solid #ccc;
-  background-color: #fff;
-  z-index: 10;
-
-  img {
-    max-width: 100%;
+  .resourceCard {
+    padding: 10px;
+    background: rgba(51, 122, 183, 0.08);
+    margin: 2px;
   }
-}
 
-#workflow-diagram-content {
-  flex-grow: 1;
-}
+  .embedded-container {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
 
-#workflow-diagram-sidebar-desc {
-  padding: 10px;
-}
+    .workflow-diagram-wrapper, .workflow-diagram-container, .workflow-diagram-content {
+      height: 100%;
+    }
 
-.split {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-.gutter {
-  background-color: #eee;
-  border-left: 1px solid #ccc;
-  background-repeat: no-repeat;
-  background-position: 50%;
-  z-index: 11;
-}
-
-.gutter.gutter-horizontal {
-  background-image: url('../img/vertical.png');
-  cursor: ew-resize;
-}
-
-.gutter.gutter-vertical {
-  background-image: url('../img/horizontal.png');
-  cursor: ns-resize;
-}
-
-.associated-resource {
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 10px;
-}
-
-.delete-associated-resource {
-  //@include delete-cross;
-}
-
-#node-modal, #edge-modal {
-  z-index: 5000; /* Has to be less than 9999 or autocompleter suggestions are hidden! */
-}
-
-#workflow-status-selected-node {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.embed-floating-link {
-  position: absolute;
-  bottom: 5px;
-  left: 5px;
-  z-index: 20000;
-}
-
-// Application
-
-// Sticky but not fixed footer
-// http://cbracco.me/css-sticky-footer-effect/
-html {
-  height: 100%;
-  position: relative;
-}
-
-body {
-  min-width: 320px;
-  position: relative;
-  margin: 0;
-  padding-bottom: 150px;
-  min-height: 100%;
-}
-
-.footer {
-  padding: 0;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: #ddd;
-  .footer-logo {
-    margin: 0 5px;
-    img { height: 48px; }
+    #cy {
+      height: 100% !important;
+      max-height: none !important;
+    }
   }
-}
 
-div.wrapper {
-  *zoom: 1;
-  background-color: #FFF;
-  border: 1px solid #cccccc;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
-  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
-  margin-bottom: 20px;
-  display: flex;
+  .workflow-toolbar-wrapper {
+    background-color: #DDDDDD;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+  }
 
+  #workflow-toolbar {
+    text-align: right;
+    margin-bottom: 5px;
+  }
 
+  #workflow-status-bar {
+    line-height: 34px;
+    //margin-bottom: 10px;
+    padding: 5px 10px;
+    background: #efefef;
+    height: 46px;
+  }
 
+  #workflow-status-message {
+    float: left;
+    //background-color: $alert-info-bg;
+    padding: 6px;
+    //border: 1px solid $alert-info-border;
+    border-radius: 4px;
+    //color: $alert-info-text;
+  }
 
-}
+  #workflow-save-warning {
+    float: left;
+    //background-color: $alert-warning-bg;
+    padding: 6px;
+    //border: 1px solid $alert-warning-border;
+    border-radius: 4px;
+    //color: $alert-warning-text;
+    margin-right: 10px;
+  }
 
-#main-container, #header-container {
-  max-width: 1200px;
-}
+  /* Hide the border from the predefined colour selector */
+  .simplecolorpicker span.color:hover, .simplecolorpicker span.color[data-selected],
+  .simplecolorpicker span.color[data-selected]:hover {
+    border-color: transparent !important;
+  }
 
-#content {
-  padding: 15px;
-  flex-grow: 1;
-}
+  #main-container.workflows-container {
+    padding: 0px 10px 10px 10px;
+    max-width: none;
+  }
 
-#sidebar {
-  width: 280px;
-  border-right: 1px solid #cccccc;
-  padding: 0;
-  flex-shrink: 0;
+  .workflow-diagram-wrapper {
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
 
+  .workflow-diagram-container {
+    display: flex;
+  }
 
+  #workflow-diagram-sidebar {
+    flex-shrink: 0;
+    width: 300px;
+    border-left: 1px solid #ccc;
+    background-color: #fff;
+    z-index: 10;
 
+    img {
+      max-width: 100%;
+    }
+  }
 
+  #workflow-diagram-content {
+    flex-grow: 1;
+  }
 
-  // Sidebar facet styles
-  table tr td.h4 {
+  #workflow-diagram-sidebar-desc {
+    padding: 10px;
+  }
+
+  .split {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .gutter {
+    background-color: #eee;
+    border-left: 1px solid #ccc;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    z-index: 11;
+  }
+
+  .gutter.gutter-horizontal {
+    background-image: url('../img/vertical.png');
+    cursor: ew-resize;
+  }
+
+  .gutter.gutter-vertical {
+    background-image: url('../img/horizontal.png');
+    cursor: ns-resize;
+  }
+
+  .associated-resource {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+
+  .delete-associated-resource {
+    //@include delete-cross;
+  }
+
+  #node-modal, #edge-modal {
+    z-index: 5000; /* Has to be less than 9999 or autocompleter suggestions are hidden! */
+  }
+
+  #workflow-status-selected-node {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .embed-floating-link {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    z-index: 20000;
+  }
+
+  // Application
+
+  // Sticky but not fixed footer
+  // http://cbracco.me/css-sticky-footer-effect/
+  html {
+    height: 100%;
+    position: relative;
+  }
+
+  body {
+    min-width: 320px;
+    position: relative;
+    margin: 0;
+    padding-bottom: 150px;
+    min-height: 100%;
+  }
+
+  .footer {
+    padding: 0;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #ddd;
+    .footer-logo {
+      margin: 0 5px;
+      img {
+        height: 48px;
+      }
+    }
+  }
+
+  div.wrapper {
+    *zoom: 1;
+    background-color: #FFF;
+    border: 1px solid #cccccc;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    display: flex;
+
+  }
+
+  #main-container, #header-container {
+    max-width: 1200px;
+  }
+
+  #content {
+    padding: 15px;
+    flex-grow: 1;
+  }
+
+  #sidebar {
+    width: 280px;
+    border-right: 1px solid #cccccc;
+    padding: 0;
+    flex-shrink: 0;
+
+    // Sidebar facet styles
+    table tr td.h4 {
+      padding-left: 10px;
+    }
+
+    table tr td {
+      padding-left: 20px;
+    }
+
+    table tr td a {
+      color: #000000;
+      padding: 3px;
+      text-decoration: none;
+    }
+
+    table tr td a:hover {
+      background-color: #B0C3C9;
+      color: #ffffff;
+      padding: 3px;
+      text-decoration: none;
+    }
+  }
+
+  #sidebar-toggle {
+    display: none;
+
+  }
+
+  #sidebar-header {
+    display: none;
+
+  }
+
+  .workflow_image {
+    width: 100%;
+  }
+
+  .profile {
+    margin-bottom: 30px;
+  }
+
+  // Bootstrap's breadcrumbs
+  .breadcrumbs {
+    margin-top: 5px;
+  }
+  .breadcrumb {
+    margin-bottom: 10px;
+  }
+
+  // Style for empty results etc.
+  .empty {
+    color: #aaaaaa;
+    font-style: italic;
+  }
+
+  // Override Bootstrap's alert
+  .alert {
+    margin-bottom: 0px;
+    margin-top: 5px;
+  }
+
+  // Bootstrap's row
+  .row {
+    margin: 10px 0px 10px 0px;
+    //padding: 0px 0px 10px 0px;  // Do not add padding to the row - messes up sidebar etc.
+  }
+
+  // From https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
+  .dont-break-out {
+
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    // word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+
+  }
+
+  .wide .media-item {
+    width: 186px;
+  }
+
+  .listing_image {
+    max-width: 150px;
+    max-height: 65px;
+  }
+
+  // Modified from CKAN - for sidebar facets
+  ul.unstyled {
+    margin-left: 0px;
+    list-style: outside none none;
+    padding-left: 0px;
+  }
+
+  .nav-simple {
+    margin: 0px;
+    list-style: outside none none;
+    padding-bottom: 0px;
+  }
+
+  .nav-simple > li {
+    padding: 0px;
+    border-bottom: 1px dotted #DDD;
+  }
+
+  .nav-simple > li:last-of-type {
+    border-bottom: 0px none;
+  }
+
+  .nav-item {
+    padding: 7px 20px;
+  }
+
+  .nav-item > a {
+    //padding-left: 15px;
+    //padding-right: 15px;
+    position: relative;
+    display: block;
+    color: #333;
+    //font-size: 14px;
+    //line-height: 20px;
+    //margin: -7px -25px;
+    padding: 7px 20px;
+    text-decoration: none;
+  }
+
+  .nav-item > a:hover {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+  }
+
+  .nav-item.active > a {
+    position: relative;
+    color: #ffffff;
+    //background-color: $grey-blue;
+  }
+
+  .nav-item.active > a:hover {
+    color: #ffffff;
+    //background-color: $blue;
+  }
+
+  // End CKAN's sidebar facets
+
+  // Facet's title
+  .nav-heading {
+    padding: 10px;
+    background-color: #F6F6F6;
+    margin: 0px;
+  }
+
+  .nav-heading-darker {
+    background-color: #dddddd;
+    padding: 10px;
+    margin: 0px 0px 5px 0px;
+  }
+
+  .filter-button {
+    color: #ffffff;
+    //background-color: $grey-blue;
+
+    &:hover {
+      //background-color: $blue !important;
+    }
+  }
+
+  .facet-count {
+    float: right;
+    color: #999;
+  }
+
+  .show-page-description {
+    font-size: medium;
+    padding: 50px 0;
+  }
+
+  .tiny-content-provider-logo {
+    max-width: 32px;
+    border-radius: 2px;
+    padding-left: 5px;
+  }
+
+  .small-content-provider-logo {
+    max-width: 64px;
+    border-radius: 4px;
     padding-left: 10px;
   }
 
-  table tr td {
-    padding-left: 20px;
+  .medium-content-provider-logo {
+    max-width: 98%;
+    //border-radius: 5px;
+    margin: 0px 10px 0px 0px;
   }
 
-  table tr td a {
-    color: #000000;
-    padding: 3px;
+  .search-results-count {
+    font-size: medium;
+    font-weight: bold;
+    margin-top: 5px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+  }
+
+  .welcome-text {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .panel-heading {
+    display: block;
+  }
+
+  .panel-default .panel-title {
+    font-size: 13px;
+    color: #005d7a;
+  }
+
+  .panel-default .panel-title a {
     text-decoration: none;
+    color: #005d7a;
   }
 
-  table tr td a:hover {
-    background-color: #B0C3C9;
-    color: #ffffff;
+  .panel-heading .accordion-toggle:after {
+    /* symbol for "opening" panels */
+    font-family: 'Glyphicons Halflings'; /* essential for enabling glyphicon */
+    content: "\e113"; /* adjust as needed, taken from bootstrap.css */
+    float: right; /* adjust as needed */
+  }
+
+  .panel-heading .accordion-toggle.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\e114"; /* adjust as needed, taken from bootstrap.css */
+  }
+
+  .panel-body {
+    padding-bottom: 0px;
+  }
+
+  .h1, .h2, .h3, .h4, .h5, .h6 {
+    color: #337ab7;
+  }
+
+  .content_action {
+    float: right;
+    margin-top: -5px;
+    margin-right: -7px;
+  }
+
+  // Fix for simple form issue: http://stackoverflow.com/questions/6748446/rails-simple-form-gives-dots-under-stars-for-required-fields-better-way-to-remo
+  abbr, accronym {
+    border-bottom: 0px !important;
+  }
+
+  /*try adding !important  after 0px if doesn't work*/
+
+  //Multiple input list on forms with + button to add more input fields dynamically
+  .multiple-input-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .multiple-list-item {
     padding: 3px;
-    text-decoration: none;
-  }
-}
-
-#sidebar-toggle {
-  display: none;
-
-}
-
-#sidebar-header {
-  display: none;
-
-}
-
-.workflow_image {
-  width: 100%;
-}
-
-.profile{
-  margin-bottom: 30px;
-}
-
-// Bootstrap's breadcrumbs
-.breadcrumbs {
-  margin-top: 5px;
-}
-.breadcrumb {
-  margin-bottom: 10px;
-}
-
-// Style for empty results etc.
-.empty {
-  color: #aaaaaa;
-  font-style: italic;
-}
-
-// Override Bootstrap's alert
-.alert {
-  margin-bottom: 0px;
-  margin-top: 5px;
-}
-
-// Bootstrap's row
-.row {
-  margin: 10px 0px 10px 0px;
-  //padding: 0px 0px 10px 0px;  // Do not add padding to the row - messes up sidebar etc.
-}
-
-// From https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
-.dont-break-out {
-
-  /* These are technically the same, but use both */
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-
-  -ms-word-break: break-all;
-  /* This is the dangerous one in WebKit, as it breaks things wherever */
-  word-break: break-all;
-  /* Instead use this non-standard one: */
-  // word-break: break-word;
-
-  /* Adds a hyphen where the word breaks, if supported (No Blink) */
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  -webkit-hyphens: auto;
-  hyphens: auto;
-
-}
-
-.wide .media-item {
-  width: 186px;
-}
-
-.listing_image {
-  max-width: 150px;
-  max-height: 65px;
-}
-
-// Modified from CKAN - for sidebar facets
-ul.unstyled {
-  margin-left: 0px;
-  list-style: outside none none;
-  padding-left: 0px;
-}
-
-.nav-simple {
-  margin: 0px;
-  list-style: outside none none;
-  padding-bottom: 0px;
-}
-
-.nav-simple > li {
-  padding: 0px;
-  border-bottom: 1px dotted #DDD;
-}
-
-.nav-simple > li:last-of-type {
-  border-bottom: 0px none;
-}
-
-.nav-item {
-  padding: 7px 20px;
-}
-
-.nav-item > a {
-  //padding-left: 15px;
-  //padding-right: 15px;
-  position: relative;
-  display: block;
-  color: #333;
-  //font-size: 14px;
-  //line-height: 20px;
-  //margin: -7px -25px;
-  padding: 7px 20px;
-  text-decoration: none;
-}
-
-.nav-item > a:hover {
-  background-color: #e6e6e6;
-  border-color: #adadad;
-}
-
-.nav-item.active > a {
-  position: relative;
-  color: #ffffff;
-  //background-color: $grey-blue;
-}
-
-.nav-item.active > a:hover {
-  color: #ffffff;
-  //background-color: $blue;
-}
-
-// End CKAN's sidebar facets
-
-// Facet's title
-.nav-heading {
-  padding: 10px;
-  background-color: #F6F6F6;
-  margin: 0px;
-}
-
-.nav-heading-darker {
-  background-color:#dddddd;
-  padding: 10px;
-  margin: 0px 0px 5px 0px;
-}
-
-.filter-button {
-  color: #ffffff;
-  //background-color: $grey-blue;
-
-  &:hover {
-    //background-color: $blue !important;
-  }
-}
-
-.facet-count {
-  float: right;
-  color: #999;
-}
-
-.show-page-description {
-  font-size: medium;
-  padding: 50px 0;
-}
-
-.tiny-content-provider-logo {
-  max-width: 32px;
-  border-radius: 2px;
-  padding-left: 5px;
-}
-
-.small-content-provider-logo {
-  max-width: 64px;
-  border-radius: 4px;
-  padding-left: 10px;
-}
-
-.medium-content-provider-logo {
-  max-width: 98%;
-  //border-radius: 5px;
-  margin: 0px 10px 0px 0px;
-}
-
-.search-results-count {
-  font-size: medium;
-  font-weight: bold;
-  margin-top: 5px;
-  padding-top: 5px;
-  padding-bottom: 10px;
-}
-
-.welcome-text {
-  padding: 20px;
-  text-align: center;
-}
-
-.panel-heading {
-  display: block;
-}
-
-.panel-default .panel-title {
-  font-size: 13px;
-  color: #005d7a;
-}
-
-.panel-default .panel-title a {
-  text-decoration: none;
-  color: #005d7a;
-}
-
-.panel-heading .accordion-toggle:after {
-  /* symbol for "opening" panels */
-  font-family: 'Glyphicons Halflings'; /* essential for enabling glyphicon */
-  content: "\e113"; /* adjust as needed, taken from bootstrap.css */
-  float: right; /* adjust as needed */
-}
-
-.panel-heading .accordion-toggle.collapsed:after {
-  /* symbol for "collapsed" panels */
-  content: "\e114"; /* adjust as needed, taken from bootstrap.css */
-}
-
-.panel-body {
-  padding-bottom: 0px;
-}
-
-.h1, .h2, .h3, .h4, .h5, .h6 {
-  color: #337ab7;
-}
-
-.content_action {
-  float: right;
-  margin-top: -5px;
-  margin-right: -7px;
-}
-
-// Fix for simple form issue: http://stackoverflow.com/questions/6748446/rails-simple-form-gives-dots-under-stars-for-required-fields-better-way-to-remo
-abbr, accronym {
-  border-bottom: 0px !important;
-}
-
-/*try adding !important  after 0px if doesn't work*/
-
-//Multiple input list on forms with + button to add more input fields dynamically
-.multiple-input-list {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.multiple-list-item {
-  padding: 3px;
-  margin: 3px 3px 3px 0px;
-  background-color: whitesmoke;
-  border-radius: 4px;
-  width: 43%;
-  display: inline;
-}
-
-.multiple-input {
-  width: 85%;
-  display: inline;
-}
-
-.multiple-input-delete {
-  background: none;
-  border: none
-}
-
-.dropdown-option {
-  cursor: pointer;
-
-  &:hover {
-    //background: $dropdown-link-hover-bg;
-  }
-}
-
-.dropdown-option-delete {
-  background: none;
-  border: none
-}
-
-.info-block {
-  color: #005d7a;
-  float: right;
-  font-size: 20px;
-  margin: 0px;
-  width: 28px;
-}
-
-/* The max width is dependant on the container (more info below) */
-.popover {
-  max-width: 500px !important; /* Max Width of the popover (depending on the container!) */
-}
-
-// To make bootstrap button wrap button text into multiple lines
-.btn {
-  white-space: normal !important;
-}
-
-// Override margin for boostrap-s page-header
-.page-header {
-  margin: 20px 0 20px;
-}
-
-.keyword-pill {
-  color: #ffffff;
-  //background-color: $grey-blue;
-  margin-bottom: 5px;
-  display: inline-block;
-  font-weight: normal;
-  text-align: center;
-  vertical-align: middle;
-  touch-action: manipulation;
-  background-image: none;
-  border: 1px solid transparent;
-  white-space: normal !important;
-  padding: 6px 12px;
-  font-size: 14px;
-  line-height: 1.42857143;
-  border-radius: 4px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-// Vertically aligned
-.vertical-align {
-  display: flex;
-  flex-direction: row;
-}
-
-.vertical-align > [class^="col-"],
-.vertical-align > [class*=" col-"] {
-  display: flex;
-  align-items: center; /* Align the flex-items vertically */
-  //justify-content: center; /* Optional, to align inner flex-items horizontally within the column  */
-}
-
-ul.featureblocks {
-  padding: 10px 0;
-  margin: 0 -10px;
-  list-style: none;
-  overflow: auto;
-
-  li {
-    float: left;
-    width: 25%;
-    padding: 0 12px;
-    border-right: 1px dotted #ccc;
-    &:last-child {
-      border: none;
-    }
-    h2 {
-      margin-top: 10px;
-      font-size: 20px;
-      line-height: 24px;
-      font-weight: normal
-    }
-    a {
-      color: #444;
-    }
-    p {
-      margin: 5px 0;
-    }
-  }
-}
-
-.searchbox {
-  width: 85%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 20px;
-  margin-bottom: 5px;
-  padding: 20px;
-  background-color: #efefef;
-  position: relative;
-  box-shadow: 0 0 5px #333;
-  -webkit-box-shadow: 0 0 5px #333;
-  -moz-box-shadow: 0 0 5px #333;
-  -webkit-border-radius: 3px !important;
-  -moz-border-radius: 3px !important;
-  border-radius: 3px !important;
-  text-align: center;
-}
-
-.homepage #sb-search {
-  background-color: transparent;
-  padding: 0;
-}
-
-sup {
-  vertical-align: top;
-  position: relative;
-  top: 5px;
-}
-
-.announcement {
-  color: #333333;
-  border: 1px solid #DDD;
-  background: #FFFFCC;
-  padding: 0.3em 0.6em;
-  margin-bottom: 1em;
-  line-height: 1.7;
-}
-
-#front-page-announcement {
-  font-size: 120%;
-  font-weight: bold;
-  text-align: center;
-}
-
-#flash-container{
-  text-align: center;
-}
-
-.schemaorg-element {
-  display: none
-}
-
-.responsive-search-box {
-  float: right;
-  width: 300px;
-
-}
-
-.info-box {
-  .info-box-header {
-    padding: 10px;
-    background-color: #F6F6F6;
+    margin: 3px 3px 3px 0px;
+    background-color: whitesmoke;
     border-radius: 4px;
+    width: 43%;
+    display: inline;
   }
-  .info-box-content {
-    margin-top: 10px;
+
+  .multiple-input {
+    width: 85%;
+    display: inline;
   }
-}
 
-.muted {
-  color: #999;
-}
-
-.preview-image {
-  overflow: auto;
-
-  > img {
-    width: 100px;
-    max-height: 150px;
-    margin: 0 10px 10px 0;
-    float: left;
+  .multiple-input-delete {
+    background: none;
+    border: none
   }
-}
 
-.bounding-box {
-  padding: 19px;
-  margin-bottom: 20px;
-  border: 1px solid #e3e3e3;
-  border-radius: 4px;
-}
+  .dropdown-option {
+    cursor: pointer;
 
-.info-icon{
-  font-size: 24px;
-}
-.info-icon-small{
-  font-size: 16px;
-}
-.info-icon-large{
-  font-size: 48px;
-}
-
-.gap {
-  padding: 0px 5px;
-}
-
-.dropdown-option-delete, a.delete-list-item, a.delete-collaboration {
-  vertical-align: middle;
-  //color: $brand-danger;
-  font-weight: bold;
-  font-size: 120%;
-
-  &:hover {
-    //color: darken($brand-danger, 20%);
+    &:hover {
+      //background: $dropdown-link-hover-bg;
+    }
   }
-}
 
-.tool-suggestions-header{
-  margin-bottom: 20px;
-}
-.external-links {
-  margin-top: 10px;
-}
+  .dropdown-option-delete {
+    background: none;
+    border: none
+  }
 
-.fresh-icon{
-  color: green;
-}
+  .info-block {
+    color: #005d7a;
+    float: right;
+    font-size: 20px;
+    margin: 0px;
+    width: 28px;
+  }
 
-.stale-icon{
-  color: orangered;
-}
+  /* The max width is dependant on the container (more info below) */
+  .popover {
+    max-width: 500px !important; /* Max Width of the popover (depending on the container!) */
+  }
 
-.days_ago_text{
-  color: grey;
-  font-style: italic;
-}
+  // To make bootstrap button wrap button text into multiple lines
+  .btn {
+    white-space: normal !important;
+  }
 
-.latest_resource_description {
-  min-width: 500px;
-  min-height: 20px;
-}
+  // Override margin for boostrap-s page-header
+  .page-header {
+    margin: 20px 0 20px;
+  }
 
-.pagination {
-  display: flex;
-  flex-wrap: wrap; /* optional. only if you want the items to wrap */
-  justify-content: center; /* for horizontal alignment */
-}
+  .keyword-pill {
+    color: #ffffff;
+    //background-color: $grey-blue;
+    margin-bottom: 5px;
+    display: inline-block;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    touch-action: manipulation;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: normal !important;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 
-#gravatar_image {
-  margin-bottom: 10px;
-}
+  // Vertically aligned
+  .vertical-align {
+    display: flex;
+    flex-direction: row;
+  }
 
-.btn-elixir {
-  //@include button-variant(white, $elixir-orange, white);
-  background-image: url('elixir_white_small.png');
-  background-repeat: no-repeat;
-  background-position: 7px 7px;
-  padding-left: 32px;
-  cursor: pointer;
-  vertical-align: middle;
-}
+  .vertical-align > [class^="col-"],
+  .vertical-align > [class*=" col-"] {
+    display: flex;
+    align-items: center; /* Align the flex-items vertically */
+    //justify-content: center; /* Optional, to align inner flex-items horizontally within the column  */
+  }
 
-div.legal-block {
-  max-width: 800px;
-  margin: auto;
-}
-
-input.loading {
-  background: url('ajax-loader.gif') no-repeat right center;
-}
-
-.btn.loading {
-  padding-right: 24px;
-  background: url('ajax-loader.gif') no-repeat right center;
-}
-
-.url-wrap {
-  display: inline-block;
-  word-wrap: break-word;
-  word-break: break-all;
-  overflow-wrap: break-word;
-}
-
-.loading_image {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.bs-type-selectors li {
-  display: inline-block;
-  padding: 5px;
-}
-
-input[type=checkbox].field-lock {
-  display: none;
-}
-
-input[type=checkbox].field-lock + label:before {
-  font-family: FontAwesome;
-  cursor: pointer;
-  display: inline-block;
-  content: "\f09c";
-  letter-spacing: 10px;
-  margin-left: 0.5em;
-  vertical-align: middle;
-  width: 1.5em;
-}
-
-input[type=checkbox].field-lock:checked + label:before {
-  content: "\f023";
-}
-
-input[type=checkbox].field-lock:checked + label:before, .field-lock-example-locked {
-  //color: $brand-success;
-  font-size: 110%;
-}
-
-input[type=checkbox].field-lock + label:before, .field-lock-example-open {
-  //color: $brand-warning;
-  font-size: 110%;
-}
-
-.keyword-button {
-  margin-right: 5px;
-}
-
-.external-button {
-  margin-right: 5px;
-}
-
-.alert-info a {
-  text-decoration: underline;
-}
-
-#why-register {
-  ul {
-    font-size: 120%;
+  ul.featureblocks {
+    padding: 10px 0;
+    margin: 0 -10px;
+    list-style: none;
+    overflow: auto;
 
     li {
-      margin: 1em 0;
+      float: left;
+      width: 25%;
+      padding: 0 12px;
+      border-right: 1px dotted #ccc;
+      &:last-child {
+        border: none;
+      }
+      h2 {
+        margin-top: 10px;
+        font-size: 20px;
+        line-height: 24px;
+        font-weight: normal
+      }
+      a {
+        color: #444;
+      }
+      p {
+        margin: 5px 0;
+      }
     }
   }
-}
 
-// wizard
+  .searchbox {
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    padding: 20px;
+    background-color: #efefef;
+    position: relative;
+    box-shadow: 0 0 5px #333;
+    -webkit-box-shadow: 0 0 5px #333;
+    -moz-box-shadow: 0 0 5px #333;
+    -webkit-border-radius: 3px !important;
+    -moz-border-radius: 3px !important;
+    border-radius: 3px !important;
+    text-align: center;
+  }
 
-.form-control {
-  margin-bottom: 5px;
-}
+  .homepage #sb-search {
+    background-color: transparent;
+    padding: 0;
+  }
 
-.highlighted {
-  padding-left: 3px;
-  border-left: 5px solid;
-}
-
-.form-info {
-  cursor: pointer;
-}
-
-.field {
-  label {
+  sup {
+    vertical-align: top;
     position: relative;
     top: 5px;
   }
-}
 
-.grip {
-  cursor: all-scroll;
+  .announcement {
+    color: #333333;
+    border: 1px solid #DDD;
+    background: #FFFFCC;
+    padding: 0.3em 0.6em;
+    margin-bottom: 1em;
+    line-height: 1.7;
+  }
+
+  #front-page-announcement {
+    font-size: 120%;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  #flash-container {
+    text-align: center;
+  }
+
+  .schemaorg-element {
+    display: none
+  }
+
+  .responsive-search-box {
+    float: right;
+    width: 300px;
+
+  }
+
+  .info-box {
+    .info-box-header {
+      padding: 10px;
+      background-color: #F6F6F6;
+      border-radius: 4px;
+    }
+    .info-box-content {
+      margin-top: 10px;
+    }
+  }
+
+  .muted {
+    color: #999;
+  }
+
+  .preview-image {
+    overflow: auto;
+
+    > img {
+      width: 100px;
+      max-height: 150px;
+      margin: 0 10px 10px 0;
+      float: left;
+    }
+  }
+
+  .bounding-box {
+    padding: 19px;
+    margin-bottom: 20px;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+  }
+
+  .info-icon {
+    font-size: 24px;
+  }
+  .info-icon-small {
+    font-size: 16px;
+  }
+  .info-icon-large {
+    font-size: 48px;
+  }
+
+  .gap {
+    padding: 0px 5px;
+  }
+
+  .dropdown-option-delete, a.delete-list-item, a.delete-collaboration {
+    vertical-align: middle;
+    //color: $brand-danger;
+    font-weight: bold;
+    font-size: 120%;
+
+    &:hover {
+      //color: darken($brand-danger, 20%);
+    }
+  }
+
+  .tool-suggestions-header {
+    margin-bottom: 20px;
+  }
+  .external-links {
+    margin-top: 10px;
+  }
+
+  .fresh-icon {
+    color: green;
+  }
+
+  .stale-icon {
+    color: orangered;
+  }
+
+  .days_ago_text {
+    color: grey;
+    font-style: italic;
+  }
+
+  .latest_resource_description {
+    min-width: 500px;
+    min-height: 20px;
+  }
+
+  .pagination {
+    display: flex;
+    flex-wrap: wrap; /* optional. only if you want the items to wrap */
+    justify-content: center; /* for horizontal alignment */
+  }
+
+  #gravatar_image {
+    margin-bottom: 10px;
+  }
+
+  .btn-elixir {
+    //@include button-variant(white, $elixir-orange, white);
+    background-image: url('elixir_white_small.png');
+    background-repeat: no-repeat;
+    background-position: 7px 7px;
+    padding-left: 32px;
+    cursor: pointer;
+    vertical-align: middle;
+  }
+
+  div.legal-block {
+    max-width: 800px;
+    margin: auto;
+  }
+
+  input.loading {
+    background: url('ajax-loader.gif') no-repeat right center;
+  }
+
+  .btn.loading {
+    padding-right: 24px;
+    background: url('ajax-loader.gif') no-repeat right center;
+  }
+
+  .url-wrap {
+    display: inline-block;
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow-wrap: break-word;
+  }
+
+  .loading_image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .bs-type-selectors li {
+    display: inline-block;
+    padding: 5px;
+  }
+
+  input[type=checkbox].field-lock {
+    display: none;
+  }
+
+  input[type=checkbox].field-lock + label:before {
+    font-family: FontAwesome;
+    cursor: pointer;
+    display: inline-block;
+    content: "\f09c";
+    letter-spacing: 10px;
+    margin-left: 0.5em;
+    vertical-align: middle;
+    width: 1.5em;
+  }
+
+  input[type=checkbox].field-lock:checked + label:before {
+    content: "\f023";
+  }
+
+  input[type=checkbox].field-lock:checked + label:before, .field-lock-example-locked {
+    //color: $brand-success;
+    font-size: 110%;
+  }
+
+  input[type=checkbox].field-lock + label:before, .field-lock-example-open {
+    //color: $brand-warning;
+    font-size: 110%;
+  }
+
+  .keyword-button {
+    margin-right: 5px;
+  }
+
+  .external-button {
+    margin-right: 5px;
+  }
+
+  .alert-info a {
+    text-decoration: underline;
+  }
+
+  #why-register {
+    ul {
+      font-size: 120%;
+
+      li {
+        margin: 1em 0;
+      }
+    }
+  }
+
+  // wizard
+
+  .form-control {
+    margin-bottom: 5px;
+  }
+
+  .highlighted {
+    padding-left: 3px;
+    border-left: 5px solid;
+  }
+
+  .form-info {
+    cursor: pointer;
+  }
+
+  .field {
+    label {
+      position: relative;
+      top: 5px;
+    }
+  }
+
+  .grip {
+    cursor: all-scroll;
+  }
 }
